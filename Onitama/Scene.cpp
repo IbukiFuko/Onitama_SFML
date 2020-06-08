@@ -3,21 +3,84 @@
 *********************/
 #include "Scene.h"
 
-int Scene::Save()
+Scene::Scene()
 {
-	if (!active)
-		return -1;
-	bgm[bgmType].stop();
+
+}
+
+Scene::Scene(int _ID)
+{
+	ID = _ID;
 	switch (ID)
 	{
 	case scene_mainMenu:
-		Save_Scene_MainMenu();
+		Initial_Scene_MainMenu();
 		break;
 	case scene_battle:
-		Save_Scene_Battle();
+		Initial_Scene_Battle();
 		break;
 	case scene_menu:
-		Save_Scene_Menu();
+		Initial_Scene_Menu();
+		break;
+	default:
+		break;
+	}
+}
+
+#pragma region Initial
+int Scene::Initial_Scene_MainMenu()
+{
+	bgmType = bgmType_Menu;
+	return 0;
+}
+
+int Scene::Initial_Scene_Battle()
+{
+	bgmType = rand() % 3 + 1;
+	for(int i = 0;i < 2;i++)
+		for(int j = 0;j < 5;j++)
+			free(piece[i][j]);
+	piece[0][0] = new Piece(0, true, sf::Vector2i(4, 2));
+	piece[1][0] = new Piece(0, false, sf::Vector2i(0, 2));
+	piece[0][1] = new Piece(1, true, sf::Vector2i(4, 0));
+	piece[0][2] = new Piece(1, true, sf::Vector2i(4, 1)); 
+	piece[0][3] = new Piece(1, true, sf::Vector2i(4, 3));
+	piece[0][4] = new Piece(1, true, sf::Vector2i(4, 4));
+	piece[1][1] = new Piece(1, false, sf::Vector2i(0, 0));
+	piece[1][2] = new Piece(1, false, sf::Vector2i(0, 1));
+	piece[1][3] = new Piece(1, false, sf::Vector2i(0, 3));
+	piece[1][4] = new Piece(1, false, sf::Vector2i(0, 4));
+
+	free(mark);
+	mark = new Mark(piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
+					piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4]);
+
+
+	//Mark(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant3, Piece *_0servant4,
+	//	Piece *_1master, Piece *_1servant1, Piece *_1servant2, Piece *_1servant3, Piece *_1servant4);
+	return 0;
+}
+
+int Scene::Initial_Scene_Menu()
+{
+	bgmType = bgmType_Menu;
+	return 0;
+}
+#pragma endregion
+
+int Scene::Unload()
+{
+	bgm[bgmType].pause();
+	switch (ID)
+	{
+	case scene_mainMenu:
+		Unload_Scene_MainMenu();
+		break;
+	case scene_battle:
+		Unload_Scene_Battle();
+		break;
+	case scene_menu:
+		Unload_Scene_Menu();
 		break;
 	default:
 		break;
@@ -45,18 +108,18 @@ int Scene::Load()
 	return 0;
 }
 
-int Scene::Event()
+int Scene::Update()
 {
 	switch (ID)
 	{
 	case scene_mainMenu:
-		Event_Scene_MainMenu();
+		Update_Scene_MainMenu();
 		break;
 	case scene_battle:
-		Event_Scene_Battle();
+		Update_Scene_Battle();
 		break;
 	case scene_menu:
-		Event_Scene_Menu();
+		Update_Scene_Menu();
 		break;
 	default:
 		break;
@@ -83,25 +146,6 @@ int Scene::Draw()
 	return 0;
 }
 
-#pragma region Save
-int Scene::Save_Scene_MainMenu()
-{
-
-	return 0;
-}
-
-int Scene::Save_Scene_Battle()
-{
-	return 0;
-}
-
-int Scene::Save_Scene_Menu()
-{
-	return 0;
-}
-
-#pragma endregion
-
 #pragma region Load
 int Scene::Load_Scene_MainMenu()
 {
@@ -120,18 +164,37 @@ int Scene::Load_Scene_Menu()
 
 #pragma endregion
 
-#pragma region Event
-int Scene::Event_Scene_MainMenu()
+#pragma region Unload
+int Scene::Unload_Scene_MainMenu()
+{
+
+	return 0;
+}
+
+int Scene::Unload_Scene_Battle()
 {
 	return 0;
 }
 
-int Scene::Event_Scene_Battle()
+int Scene::Unload_Scene_Menu()
 {
 	return 0;
 }
 
-int Scene::Event_Scene_Menu()
+#pragma endregion
+
+#pragma region Update
+int Scene::Update_Scene_MainMenu()
+{
+	return 0;
+}
+
+int Scene::Update_Scene_Battle()
+{
+	return 0;
+}
+
+int Scene::Update_Scene_Menu()
 {
 	return 0;
 }
@@ -148,6 +211,13 @@ int Scene::Draw_Scene_MainMenu()
 
 int Scene::Draw_Scene_Battle()
 {
+	window.draw(sBackground);
+	window.draw(sChessboard);
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 5; j++)
+			if (piece[i][j]->Enable())
+				piece[i][j]->Draw();
+	mark->Draw();
 	return 0;
 }
 
@@ -157,10 +227,3 @@ int Scene::Draw_Scene_Menu()
 }
 
 #pragma endregion
-
-void Scene_clean()
-{
-	//‘› ±«Â≥˝ª≠√Ê£¨±£¡Ù“≥√Êª∫¥Ê
-	//‘›Õ£À˘”–“Ù¿÷£¨±£¡Ù“≥√Êª∫¥Ê
-	//«–ªªEventœÏ”¶
-}

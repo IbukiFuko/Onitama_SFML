@@ -8,23 +8,21 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "Value.h"
+#include "Object.h"
 
 class Scene//场景
 {
 private:
 	int ID;//场景ID
-	int bgmType;
-	bool active;
-public:
-	int Save();//缓存
-#pragma region Save
-	int Save_Scene_MainMenu();
-	int Save_Scene_Battle();
-	int Save_Scene_Menu();
+	int bgmType;//场景背景音乐
 
+#pragma region Initial
+	int Initial_Scene_MainMenu();
+	int Initial_Scene_Battle();
+	int Initial_Scene_Menu();
 #pragma endregion
 
-	int Load();//读取缓存
+
 #pragma region Load
 	int Load_Scene_MainMenu();
 	int Load_Scene_Battle();
@@ -32,23 +30,33 @@ public:
 
 #pragma endregion
 
-	int Event();//场景对应的事件响应
-#pragma region Event
-	int Event_Scene_MainMenu();
-	int Event_Scene_Battle();
-	int Event_Scene_Menu();
+#pragma region Unload
+	int Unload_Scene_MainMenu();
+	int Unload_Scene_Battle();
+	int Unload_Scene_Menu();
 
 #pragma endregion
 
-	int Draw();//场景绘制
+#pragma region Update
+	int Update_Scene_MainMenu();
+	int Update_Scene_Battle();
+	int Update_Scene_Menu();
+
+#pragma endregion
+
 #pragma region Event
 	int Draw_Scene_MainMenu();
 	int Draw_Scene_Battle();
 	int Draw_Scene_Menu();
 
 #pragma endregion
+
+
+public:
+	Scene();
+	Scene(int );
+	int Load();//加载场景
+	int Unload();//卸载场景
+	int Update();//场景逻辑
+	int Draw();//场景绘制
 };
-
-int LoadScene(Scene);//加载场景
-
-void Scene_clean();

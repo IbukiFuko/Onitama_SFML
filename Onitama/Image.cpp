@@ -89,6 +89,11 @@ float Image::GetRotation()//获取旋转
 	return rotation;
 }
 
+sf::Sprite Image::GetSprite()//获取图像
+{
+	return sImage;
+}
+
 void Image::Refresh()//刷新状态
 {
 	if (!flag)

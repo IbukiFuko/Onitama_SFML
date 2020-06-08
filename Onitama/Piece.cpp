@@ -3,19 +3,27 @@
 *********************/
 #include "Piece.h"
 
+Piece::Piece()
+{
+	Piece(0, true, sf::Vector2i(0, 0));
+}
+
 Piece::Piece(int _type, bool _isMainPlayer, sf::Vector2i _position)
 {
 	enable = true;
 	type = _type;
-	isMainPlayer = (int)(!_isMainPlayer);
+	isMainPlayer = _isMainPlayer;
 	position = _position;//棋盘坐标初始化
-	coordinate = sf::Vector2i(COORDINATE.x + _position.x * SIZE.x, COORDINATE.y + _position.y * SIZE.y);//像素坐标初始化
-	image = Image(coordinate.x, coordinate.y, sizePiece[type].x, sizePiece[type].y, type == 0 ? SIZE_MASTER_X : SIZE_SERVANT_X, type == 0 ? SIZE_MASTER_Y : SIZE_SERVANT_Y, &tPiece[isMainPlayer][type], "", 6);
+	coordinate.x = COORDINATE.x + _position.y * SIZE.x;
+	coordinate.y = COORDINATE.y + _position.x * SIZE.y;
+	image = Image(coordinate.x, coordinate.y, type == 0 ? tSIZE_MASTER_X : tSIZE_SERVANT_X, type == 0 ? tSIZE_MASTER_X : tSIZE_SERVANT_X, type == 0 ? SIZE_MASTER_X : SIZE_SERVANT_X, type == 0 ? SIZE_MASTER_Y : SIZE_SERVANT_Y, &tPiece[isMainPlayer?0:1][type], "", 6);
+	Refresh();
 }
 
 int Piece::Move(sf::Vector2i delta)//棋子移动
 {
 	position = position + delta;//逻辑位置
+	Refresh();
 	return 0;
 }
 
@@ -24,9 +32,19 @@ sf::Vector2i Piece::getPos()//获取位置
 	return position;
 }
 
-bool Piece::isHere(sf::Vector2i _position)//是否存在
+sf::Vector2i Piece::getCoordinate()//获取坐标
+{
+	return coordinate;
+}
+
+bool Piece::IsHere(sf::Vector2i _position)//是否存在
 {
 	return (position == _position);
+}
+
+bool Piece::Enable()
+{
+	return enable;
 }
 
 void Piece::Update()
@@ -42,6 +60,7 @@ int Piece::Draw()
 
 void Piece::Refresh()//刷新状态
 {
-	coordinate = sf::Vector2i(COORDINATE.x + position.x * SIZE.x, COORDINATE.y + position.y * SIZE.y);//像素坐标刷新
+	coordinate.x = COORDINATE.x + position.y * SIZE.x;
+	coordinate.y = COORDINATE.y + position.x * SIZE.y;
 	image.SetPosition(coordinate);
 }

@@ -1,27 +1,28 @@
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <ctime>
 #include <SFML/Audio.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Window.hpp>
 #include "Value.h"		//全局变量
 #include "Initial.h"	//初始化
-#include "Scene.h"		//场景
-#include "Image.h"		//按钮
-#include "Card.h"
+#include "Scene.h"
+#include "Object.h"
 
 /***************************
 待补充：
 Card.cpp、Mark.cpp
 修改位图当前大小和原大小信息
+Object.cpp
+初始场景指针位置
 
 ****************************/
-
 
 using namespace std;
 
 #pragma region Init
-Image testButton;
-Card card;
+Scene scene;
 int i = 0;
 int x = 0, y = 0;
 #pragma endregion
@@ -30,23 +31,23 @@ int x = 0, y = 0;
 int Init();		//初始化
 int Event();		//事件响应
 void DrawWindow();	//绘制窗体
-void Update();		//主循环
 #pragma endregion
 
 int main()
 {
 	system("cls");
+	srand((int)time(NULL));//设置随机数种子
+	Init();
+	scene = Scene(scene_battle);
 	while (window.isOpen())
 	{
-		Init();
-		bgm[bgmType_Menu].play();
 		while (window.isOpen())
 		{
 			if (Event() == 1)//事件响应
 			{
 				break;
 			}
-			Update();		//主循环
+			scene.Update();
 			DrawWindow();	//绘制窗体
 		}
 	}
@@ -61,7 +62,6 @@ int Init()//初始化
 	LoadMusic();//加载音乐
 	LoadTexture();//加载图片
 	testText = sf::Text("fps" + to_string(FPS), font, 50);
-	testButton = Image(540, 360, 108 * 3, 72 * 3, 1080, 720, &tLogo, "TestStr", 50);
 	return 0;
 }
 
@@ -88,22 +88,6 @@ int Event()//事件响应
 	}
 	if (!GameOver)
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		{
-			testButton.SetPosition(x, y = y - 10);
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		{
-			testButton.SetPosition(x, y = y +10);
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		{
-			testButton.SetPosition(x = x- 10, y);
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		{
-			testButton.SetPosition(x = x +10, y);
-		}
 	}
 	else
 	{
@@ -115,18 +99,14 @@ int Event()//事件响应
 	return 0;
 }
 
-void Update()//主循环
-{
-	if (!GameOver)
-	{
-	}
-}
-
 void DrawWindow()//绘制窗体
 {
 	window.clear();//清屏, 
-	testText = sf::Text("fps" + to_string(FPS) + "\tx: " + to_string(sf::Mouse::getPosition(window).x * WindowWidth / window.getSize().x) + "\ty: " + to_string(sf::Mouse::getPosition(window).y * WindowHeight / window.getSize().y), font, 20);
-	testButton.Draw();
+	scene.Draw();//绘制当前场景
+
+	testText = sf::Text("fps" + to_string(FPS) + "\tx: " + to_string(sf::Mouse::getPosition(window).x * WindowWidth / window.getSize().x) + "\ty: " + to_string(sf::Mouse::getPosition(window).y * WindowHeight / window.getSize().y)
+		, font, 20);
+	//testButton.Draw();
 	window.draw(testText);
 	window.display();//更新窗口
 }

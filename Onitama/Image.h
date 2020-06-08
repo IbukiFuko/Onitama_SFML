@@ -36,6 +36,7 @@ public:
 	sf::Vector2i GetPos();//获取位置
 	sf::Vector2i GetSize();//获取大小
 	float GetRotation();//获取旋转
+	sf::Sprite GetSprite();//获取图像
 
 	void Refresh();//刷新状态
 };

@@ -9,14 +9,14 @@
 #include <SFML/Window.hpp>
 
 #define MAX_CARD_NUM 16
+#define COORDINATE sf::Vector2i(110,103)//棋盘左上坐标
+#define SIZE sf::Vector2i(132,130)//棋盘格子像素大小
 
 extern const int WindowWidth, WindowHeight;	//窗体大小
 extern const int StageWidth, StageHeight;		//舞台大小
 extern const wchar_t* WindowName;//窗体名称
 extern const int FPS;//帧率
 
-extern sf::Vector2i COORDINATE;//棋盘左上坐标
-extern sf::Vector2i SIZE;//棋盘格子像素大小
 
 extern bool GameOver;
 
@@ -49,7 +49,6 @@ extern sf::Music bgm[];//BGM（0-Menu; 1~3BGM）
 extern sf::Texture tLogo, tBackground, tChessboard;
 extern sf::Sprite sLogo, sBackground, sChessboard;
 extern sf::Texture tPiece[][2], tMark[], tCard[];
-//extern sf::Sprite sPiece[], sMark[];
+extern sf::Sprite sPiece[][2], sMark[];
 extern sf::Vector2i sizeLogo;
-extern sf::Vector2i sizePiece[];
 extern sf::IntRect a;

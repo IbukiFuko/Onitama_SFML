@@ -3,6 +3,11 @@
 *********************/
 #include "Mark.h"
 
+Mark::Mark()
+{
+
+}
+
 Mark::Mark(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant3, Piece *_0servant4,
 		   Piece *_1master, Piece *_1servant1, Piece *_1servant2, Piece *_1servant3, Piece *_1servant4)
 {
@@ -18,9 +23,9 @@ Mark::Mark(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0serva
 	piece[1][3] = _1servant3;
 	piece[1][4] = _1servant4;
 
-	image[0] = Image(-100, -100, 1, 1, 1, 1, &tMark[0], "", 6);
+	image[0] = Image(-100, -100, tSIZE_MARK0_X, tSIZE_MARK0_Y, SIZE_MARK0_X, SIZE_MARK0_Y, &tMark[0], "", 6);
 	for(int i = 1; i < 5; i++)
-		image[i] = Image(-100, -100, 1, 1, 1, 1, &tMark[1], "", 6);
+		image[i] = Image(-100, -100, tSIZE_MARK1_X, tSIZE_MARK1_Y, SIZE_MARK1_X, SIZE_MARK1_Y, &tMark[1], "", 6);
 }
 
 void Mark::Update()

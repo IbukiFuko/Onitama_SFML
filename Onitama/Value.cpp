@@ -8,8 +8,6 @@ const int StageWidth = 1080, StageHeight = 720;		//舞台大小
 const wchar_t* WindowName = L"Onitama（李琛承）";//窗体名称
 const int FPS = 60;//帧率
 
-sf::Vector2i COORDINATE = sf::Vector2i(0,0);//棋盘左下坐标
-sf::Vector2i SIZE = sf::Vector2i(0,0);//棋盘格子像素大小
 
 bool GameOver = false;
 
@@ -27,7 +25,6 @@ sf::Music bgm[4];//BGM（0-Menu; 1~3BGM）
 sf::Texture tLogo, tBackground, tChessboard;
 sf::Sprite sLogo, sBackground, sChessboard;
 sf::Texture tPiece[2][2], tMark[2], tCard[MAX_CARD_NUM];
-//sf::Sprite sPiece[2], sMark[2];
+sf::Sprite sPiece[2][2], sMark[2];
 sf::Vector2i sizeLogo;
-sf::Vector2i sizePiece[2];
 sf::IntRect tmp;
