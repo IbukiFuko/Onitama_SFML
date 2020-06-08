@@ -30,6 +30,7 @@ public:
 	int Move(sf::Vector2i);//棋子移动
 	sf::Vector2i getPos();//获取位置
 	bool isHere(sf::Vector2i);//是否存在
+	void Update();
 	int Draw();//绘制棋子
 
 	void Refresh();//刷新状态

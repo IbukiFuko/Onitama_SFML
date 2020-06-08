@@ -23,7 +23,8 @@ private:
 	Image image[5];//标志图像(0选中，1-4可移动位置)
 public:
 	Mark(Piece *, Piece *, Piece *, Piece *, Piece *, Piece *, Piece *, Piece *, Piece *, Piece *);
-	
+	void Update();
+
 	int Draw();//绘制标志
 
 	void Refresh();//刷新状态

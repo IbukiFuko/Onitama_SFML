@@ -23,6 +23,11 @@ Mark::Mark(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0serva
 		image[i] = Image(-100, -100, 1, 1, 1, 1, &tMark[1], "", 6);
 }
 
+void Mark::Update()
+{
+
+}
+
 int Mark::Draw()
 {
 	for (int i = 0; i < 5; i++)

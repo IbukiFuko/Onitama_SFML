@@ -29,6 +29,11 @@ bool Piece::isHere(sf::Vector2i _position)//ÊÇ·ñ´æÔÚ
 	return (position == _position);
 }
 
+void Piece::Update()
+{
+
+}
+
 int Piece::Draw()
 {
 	image.Draw();

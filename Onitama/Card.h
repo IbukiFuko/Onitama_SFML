@@ -18,11 +18,13 @@ class Card
 {
 private:
 	int type;//卡牌编号
+	bool isMove;//是否移动中
 	bool available[CARD_MAX_Y][CARD_MAX_X];//可移动的偏移
 	Image image;//图片
 	int SetAvailable();//设置卡片可移动偏移
 public:
 	Card();
 	Card(int);
-	void Draw();
+	void Update();
+	int Draw();
 };

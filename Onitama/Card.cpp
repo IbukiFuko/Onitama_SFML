@@ -6,6 +6,7 @@
 Card::Card()
 {
 	type = 0;
+	isMove = false;
 	image = Image(-100, -100, 1, 1, 1, 1, &tCard[0], "", 6);
 	SetAvailable();//ÉèÖÃ¿¨Æ¬¿ÉÒÆ¶¯Æ«ÒÆ
 }
@@ -13,6 +14,7 @@ Card::Card()
 Card::Card(int _type)
 {
 	type = _type;
+	isMove = false;
 	image = Image(100, 100, 1, 1, 1, 1, &tCard[_type], "", 6);
 	SetAvailable();//ÉèÖÃ¿¨Æ¬¿ÉÒÆ¶¯Æ«ÒÆ
 }
@@ -116,7 +118,13 @@ int Card::SetAvailable()//ÉèÖÃ¿¨Æ¬¿ÉÒÆ¶¯Æ«ÒÆ
 	return 0;
 }
 
-void Card::Draw()
+void Card::Update()
+{
+
+}
+
+int Card::Draw()
 {
 	image.Draw();
+	return 0;
 }
