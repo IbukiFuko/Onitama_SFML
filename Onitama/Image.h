@@ -31,6 +31,7 @@ public:
 	int SetSize(int, int);//设置大小
 	int SetSprite(sf::Texture *, int, int);//设置纹理
 	int SetText(std::string, int);//设置文字
+	int SetColor(sf::Color);//设置遮罩
 	int Rotate();//旋转
 	int Rotate(int);
 	int SetRotation(float);//设置旋转
@@ -40,7 +41,6 @@ public:
 	float GetRotation();//获取旋转
 	sf::Sprite GetSprite();//获取图像
 	bool isSelected();//鼠标是否选中
-	bool isSelected(sf::Color );//鼠标是否选中(遮罩)
 
 	void Refresh();//刷新状态
 };

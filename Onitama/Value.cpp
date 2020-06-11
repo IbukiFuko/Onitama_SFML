@@ -27,14 +27,16 @@ sf::Music bgm[4];//BGM（0-Menu; 1~3BGM）
 
 sf::Texture tLogo, tBackground, tChessboard;
 sf::Sprite sLogo, sBackground, sChessboard;
-sf::Texture tPiece[2][2], tMark[2], tCard[MAX_CARD_NUM];
+sf::Texture tPiece[2][2], tMark[3], tCard[MAX_CARD_NUM];
 sf::Sprite sPiece[2][2], sMark[2];
 sf::Vector2i sizeLogo;
 sf::IntRect tmp;
 
 bool mouseLeftPressed = false;//鼠标左键按下
+bool spacePressed = false;//空格按下
 
 void resetEvent()
 {
 	mouseLeftPressed = false;
+	spacePressed = false;
 }

@@ -125,6 +125,11 @@ int LoadTexture()//加载图片
 		cout << "未成功加载/chess/Mark1.png" << endl;
 		return EXIT_FAILURE;
 	}
+	if (!tMark[2].loadFromFile("./resource/image/card/selCard.png"))
+	{
+		cout << "未成功加载/card/selCard.png" << endl;
+		return EXIT_FAILURE;
+	}
 
 	//加载Card
 	char fileSource[64];

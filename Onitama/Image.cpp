@@ -59,6 +59,12 @@ int Image::SetText(std::string str, int size)//设置文字
 	return 0;
 }
 
+int Image::SetColor(sf::Color _color)//鼠标是否选中(遮罩)
+{
+	sImage.setColor(_color);
+	return 0;
+}
+
 int Image::Rotate()//旋转
 {
 	rotation++;
@@ -117,21 +123,6 @@ bool Image::isSelected()//鼠标是否选中
 	}
 	else
 	{
-		return false;
-	}
-}
-
-bool Image::isSelected(sf::Color _color)//鼠标是否选中(遮罩)
-{
-	if (mousePos.x >= position.x - imageWidth / 2.0f && mousePos.x <= position.x + imageWidth / 2.0f
-		&& mousePos.y >= position.y - imageHeight / 2.0f && mousePos.y <= position.y + imageHeight / 2.0f)
-	{
-		sImage.setColor(_color);
-		return true;
-	}
-	else
-	{
-		sImage.setColor(sf::Color(255, 255, 255, 255));
 		return false;
 	}
 }

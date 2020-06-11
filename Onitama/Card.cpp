@@ -3,6 +3,8 @@
 *********************/
 #include "Card.h"
 
+int Card::selID = -1;
+
 Card::Card()
 {
 	type = 0;
@@ -12,6 +14,7 @@ Card::Card()
 
 Card::Card(int _type)
 {
+	ID = objectID++;
 	type = _type;
 	player = 0;
 	deltaRotation = 0;
@@ -186,12 +189,59 @@ void Card::SetPos(int _cardID, bool isPlay)
 	}
 }
 
+int Card::getID()//获取ID
+{
+	return ID;
+}
+
+int Card::getSelID()
+{
+	return selID;
+}
+
+sf::Vector2i Card::getPos()//获取坐标
+{
+	return image.GetPos();
+}
+
+int Card::getAvailable(sf::Vector2i *a, sf::Vector2i *b, sf::Vector2i *c, sf::Vector2i *d)//获取可移动位置
+{
+	int count = 0;
+	sf::Vector2i *tmp[4] = { a,b,c,d };
+	for(int i = 0;i < CARD_MAX_Y;i++)
+		for (int j = 0; j < CARD_MAX_X; j++)
+		{
+			if (available[i][j])
+			{
+				(*tmp[count]).x = i - 2;
+				(*tmp[count]).y = j - 2;
+				count++;
+			}
+		}
+	return count;
+}
+
 void Card::Update()
 {
-	if (currentPlayer == player && image.isSelected(sf::Color(255,255,55,255)))
+	if (currentPlayer == player && image.isSelected())
 	{
-		printf("\rCard:%d                            ", type);
+		image.SetColor(sf::Color(255, 255, 55, 255));
+		if (mouseLeftPressed)
+		{
+			selID = selID == ID ? -1 : ID;
+			printf("\rCard:%d                            ", type);
+			mouseLeftPressed = false;
+		}
 	}
+	else
+	{
+		image.SetColor(sf::Color(255, 255, 255, 255));
+	}
+
+
+
+
+
 	//动画
 	if (step == 0)
 	{
@@ -212,4 +262,9 @@ int Card::Draw()
 {
 	image.Draw();
 	return 0;
+}
+
+void Card::Reset()//重置选中
+{
+	selID = -1;
 }

@@ -67,14 +67,19 @@ void Piece::Update()
 {
 	if (!enable)
 		return;
-	if (1 && image.isSelected(sf::Color(255, 255, 55, 255)))
+	if (currentPlayer == player && image.isSelected())
 	{
+		image.SetColor(sf::Color(255, 255, 55, 255));
 		if (mouseLeftPressed)
 		{
 			selID = selID == ID ? -1 : ID;
 			printf("\r%s:%s                            ", player == mainPlayer ? "mainPlayer" : "associatePlayer", type == 0 ? "Master" : "Servant");
 			mouseLeftPressed = false;
 		}
+	}
+	else
+	{
+		image.SetColor(sf::Color(255, 255, 255, 255));
 	}
 }
 
@@ -84,6 +89,11 @@ int Piece::Draw()
 		return -1;
 	image.Draw();
 	return 0;
+}
+
+void Piece::Reset()//重置选中
+{
+	selID = -1;
 }
 
 void Piece::Refresh()//刷新状态

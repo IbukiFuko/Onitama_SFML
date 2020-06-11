@@ -46,5 +46,6 @@ public:
 	void Update();
 	int Draw();//绘制棋子
 
+	static void Reset();;//重置选中
 	void Refresh();//刷新状态
 };

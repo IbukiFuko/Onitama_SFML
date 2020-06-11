@@ -90,10 +90,13 @@ int Event()//事件响应
 		{
 			mouseLeftPressed = true;
 		}
+		if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		{
+			spacePressed = true;
+		}
 	}
 	if (!GameOver)
 	{
-
 	}
 	else
 	{
@@ -107,7 +110,7 @@ int Event()//事件响应
 
 void DrawWindow()//绘制窗体
 {
-	window.clear();//清屏, 
+	window.clear();//清屏
 	scene.Draw();//绘制当前场景
 
 	testText = sf::Text("fps" + to_string(FPS) + "\tx: " + to_string(mousePos.x) + "\ty: " + to_string(mousePos.y), font, 20);

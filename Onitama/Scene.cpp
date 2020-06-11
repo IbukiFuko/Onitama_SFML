@@ -38,7 +38,7 @@ int Scene::Initial_Scene_Battle()
 {
 	bgmType = rand() % 3 + 1;
 	bgm[bgmType].play();
-	currentPlayer = mainPlayer;
+	currentPlayer = 0;
 	for(int i = 0;i < 2;i++)
 		for(int j = 0;j < 5;j++)
 			free(piece[i][j]);
@@ -52,10 +52,6 @@ int Scene::Initial_Scene_Battle()
 	piece[1][2] = new Piece(1, false, sf::Vector2i(0, 1));
 	piece[1][3] = new Piece(1, false, sf::Vector2i(0, 3));
 	piece[1][4] = new Piece(1, false, sf::Vector2i(0, 4));
-
-	free(mark);
-	mark = new Mark(piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
-					piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4]);
 
 	int tmp[16] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 };
 	int randomNum, tmpNum;
@@ -74,6 +70,10 @@ int Scene::Initial_Scene_Battle()
 		playerCard[i] = i;//分配玩家手牌
 	}
 	
+
+	free(mark);
+	mark = new Mark(piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
+		piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4], card);
 
 	return 0;
 }
@@ -141,6 +141,14 @@ int Scene::Update()
 	default:
 		break;
 	}
+
+	if (spacePressed)
+	{
+		spacePressed = false;
+		Mark::Reset();
+		currentPlayer = currentPlayer == mainPlayer ? associatePlayer : mainPlayer;
+	}
+
 	return 0;
 }
 
@@ -228,7 +236,6 @@ int Scene::Update_Scene_Menu()
 int Scene::Draw_Scene_MainMenu()
 {
 	window.draw(sLogo);//绘制Logo背景
-
 	return 0;
 }
 
@@ -240,9 +247,12 @@ int Scene::Draw_Scene_Battle()
 		for (int j = 0; j < 5; j++)
 			if (piece[i][j]->Enable())
 				piece[i][j]->Draw();
-	mark->Draw();
+
 	for (int i = 0; i < 5; i++)
 		card[i]->Draw();
+
+	mark->Draw();
+	
 	return 0;
 }
 
