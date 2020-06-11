@@ -1,16 +1,16 @@
 /*********************
 *       指示框       *
 *********************/
-#include "Mark.h"
+#include "Bot.h"
 
-Mark::Mark()
+Bot::Bot()
 {
 
 }
 
-Mark::Mark(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant3, Piece *_0servant4,
-		   Piece *_1master, Piece *_1servant1, Piece *_1servant2, Piece *_1servant3, Piece *_1servant4,
-		   Card **_card)
+Bot::Bot(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant3, Piece *_0servant4,
+	Piece *_1master, Piece *_1servant1, Piece *_1servant2, Piece *_1servant3, Piece *_1servant4,
+	Card **_card)
 {
 	selPiece = -1, selCard = -1;
 	time = 0;
@@ -31,12 +31,12 @@ Mark::Mark(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0serva
 		card[i] = _card[i];
 
 	image[0] = Image(-1000, -1000, tSIZE_MARK0_X, tSIZE_MARK0_Y, SIZE_MARK0_X, SIZE_MARK0_Y, &tMark[0], "", 6);
-	for(int i = 1; i < 5; i++)
+	for (int i = 1; i < 5; i++)
 		image[i] = Image(-1000, -1000, tSIZE_MARK1_X, tSIZE_MARK1_Y, SIZE_MARK1_X, SIZE_MARK1_Y, &tMark[1], "", 6);
 	image[5] = Image(-1000, -1000, 142, 170, 142, 170, &tMark[2], "", 6);
 }
 
-void Mark::Update()
+void Bot::Update()
 {
 	time++;
 	if (time == FPS * 2)
@@ -53,7 +53,7 @@ void Mark::Update()
 		}
 		selPiece = -1;
 	}
-	if(selPiece > -1)
+	if (selPiece > -1)
 		image[0].SetPosition(piece[currentPlayer][selPiece]->getCoordinate());
 	else
 		image[0].SetPosition(-1000, -1000);
@@ -75,7 +75,7 @@ void Mark::Update()
 		image[5].SetPosition(-1000, -1000);
 	//可移动位置
 	int count = 1, sum = 0;
-	for(int i = 1;i < 5;i++)
+	for (int i = 1; i < 5; i++)
 		image[i].SetPosition(-1000, -1000);
 	if (selPiece > -1 && selCard > -1)//同时选中了卡片和棋子
 	{
@@ -111,10 +111,10 @@ void Mark::Update()
 				piece[currentPlayer][selPiece]->Move(imagePos[i]);
 				for (int j = 0; j < 5; j++)
 					if (piece[currentPlayer == mainPlayer ? associatePlayer : mainPlayer][j]->getPos() == imagePos[i])
-						piece[currentPlayer == mainPlayer ? associatePlayer : mainPlayer][j]->SetEnable(false,FPS);
+						piece[currentPlayer == mainPlayer ? associatePlayer : mainPlayer][j]->SetEnable(false, FPS);
 				//卡片操作
-				int tmpIndex = -1,tmpVal;
-				for(int j = 0;j < 5;j++)//找到selCard对应的playerCard的下标
+				int tmpIndex = -1, tmpVal;
+				for (int j = 0; j < 5; j++)//找到selCard对应的playerCard的下标
 					if (card[playerCard[j]]->getID() == card[selCard]->getID())
 					{
 						tmpIndex = j;
@@ -136,7 +136,7 @@ void Mark::Update()
 	}
 }
 
-int Mark::Draw()
+int Bot::Draw()
 {
 	for (int i = 0; i < 5; i++)
 	{
@@ -147,13 +147,13 @@ int Mark::Draw()
 	return 0;
 }
 
-void Mark::Reset()//重置状态
+void Bot::Reset()//重置状态
 {
 	Piece::Reset();
 	Card::Reset();
 }
 
-void Mark::Refresh()//刷新状态
+void Bot::Refresh()//刷新状态
 {
-	
+
 }

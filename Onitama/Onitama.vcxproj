@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bot.cpp" />
     <ClCompile Include="Card.cpp" />
     <ClCompile Include="Image.cpp" />
     <ClCompile Include="Initial.cpp" />
@@ -134,6 +135,7 @@
     <ClCompile Include="Value.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bot.h" />
     <ClInclude Include="Card.h" />
     <ClInclude Include="Image.h" />
     <ClInclude Include="Initial.h" />

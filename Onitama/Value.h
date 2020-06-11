@@ -22,6 +22,7 @@ extern const int FPS;//帧率
 
 extern int objectID;//object互斥id
 
+extern int GameMode;//游戏方式
 extern bool GameOver;
 extern bool isPlayingAnimation;//是否在播放动画
 
@@ -32,9 +33,17 @@ extern sf::Vector2i mousePos;//鼠标位置
 
 extern const int MaxPlayer;//玩家最大数量
 extern int currentPlayer;//当前玩家
+extern int winner;//胜者
 extern int playerCard[];//卡牌
 
 extern sf::Text testText;//测试文字
+
+enum gameMode//游戏方式枚举
+{
+	pvp,
+	pve,
+	online,
+};
 
 enum bgmType//bgm枚举
 {
@@ -49,6 +58,7 @@ enum sceneID//scene枚举
 	scene_mainMenu,
 	scene_battle,
 	scene_menu,
+	scene_win,
 };
 
 enum cardID//card枚举
@@ -67,9 +77,11 @@ enum playerID//玩家枚举
 };
 
 extern sf::Music bgm[];//BGM（0-Menu; 1~3BGM）
+extern sf::SoundBuffer bufSelect, bufVictory[], bufNewTurn, bufStartGame, bufMove, bufEat;
+extern sf::Sound soundSelect, soundVictory[], soundNewTurn, soundStartGame, soundMove, soundEat;
 
-extern sf::Texture tLogo, tBackground, tChessboard;
-extern sf::Sprite sLogo, sBackground, sChessboard;
+extern sf::Texture tLogo, tRedWin, tBlueWin, tBackground, tChessboard;
+extern sf::Sprite sLogo, sRedWin, sBlueWin, sBackground, sChessboard;
 extern sf::Texture tPiece[][2], tMark[], tCard[];
 //extern sf::Sprite sPiece[][2], sMark[];
 extern sf::Vector2i sizeLogo;

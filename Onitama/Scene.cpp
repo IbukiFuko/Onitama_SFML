@@ -25,19 +25,23 @@ Scene::Scene(int _ID)
 	default:
 		break;
 	}
+	Load();
 }
 
 #pragma region Initial
 int Scene::Initial_Scene_MainMenu()
 {
 	bgmType = bgmType_Menu;
+	startButton[0] = Image(930, 540, 200, 60, 1080, 720, &tBackground, "PVP", 50);
+	startButton[1] = Image(930, 610, 200, 60, 1080, 720, &tBackground, "PVE", 50);
+	startButton[2] = Image(930, 680, 200, 60, 1080, 720, &tBackground, "Online", 50);
 	return 0;
 }
 
 int Scene::Initial_Scene_Battle()
 {
 	bgmType = rand() % 3 + 1;
-	bgm[bgmType].play();
+	bgm[bgmType].stop();
 	currentPlayer = rand() % 2;
 	if (currentPlayer == mainPlayer)
 		printf("\n红方先!");
@@ -80,6 +84,11 @@ int Scene::Initial_Scene_Battle()
 	mark = new Mark(piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
 		piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4], card);
 
+	bot = new Bot(piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
+		piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4], card);
+
+	menuButton = Image(1000, 50, 120, 50, 1080, 720, &tBackground, "Menu", 30);
+
 	return 0;
 }
 
@@ -92,7 +101,6 @@ int Scene::Initial_Scene_Menu()
 
 int Scene::Unload()
 {
-	bgm[bgmType].pause();
 	switch (ID)
 	{
 	case scene_mainMenu:
@@ -104,6 +112,9 @@ int Scene::Unload()
 	case scene_menu:
 		Unload_Scene_Menu();
 		break;
+	case scene_win:
+		Unload_Scene_Win();
+		break;
 	default:
 		break;
 	}
@@ -112,7 +123,6 @@ int Scene::Unload()
 
 int Scene::Load()
 {
-	bgm[bgmType].play();
 	switch (ID)
 	{
 	case scene_mainMenu:
@@ -123,6 +133,9 @@ int Scene::Load()
 		break;
 	case scene_menu:
 		Load_Scene_Menu();
+		break;
+	case scene_win:
+		Load_Scene_Win();
 		break;
 	default:
 		break;
@@ -143,11 +156,14 @@ int Scene::Update()
 	case scene_menu:
 		Update_Scene_Menu();
 		break;
+	case scene_win:
+		Update_Scene_Win();
+		break;
 	default:
 		break;
 	}
 
-	if (spacePressed)
+	if (spacePressed)//作弊按键
 	{
 		spacePressed = false;
 		Mark::Reset();
@@ -170,6 +186,9 @@ int Scene::Draw()
 	case scene_menu:
 		Draw_Scene_Menu();
 		break;
+	case scene_win:
+		Draw_Scene_Win();
+		break;
 	default:
 		break;
 	}
@@ -179,16 +198,36 @@ int Scene::Draw()
 #pragma region Load
 int Scene::Load_Scene_MainMenu()
 {
+	ID = scene_mainMenu;
+	bgmType = bgmType_Menu;
+	bgm[bgmType].stop();
+	bgm[bgmType].play();
 	return 0;
 }
 
 int Scene::Load_Scene_Battle()
 {
+	ID = scene_battle;
+	bgmType = rand() % 3 + 1;
+	bgm[bgmType].play();
 	return 0;
 }
 
 int Scene::Load_Scene_Menu()
 {
+	ID = scene_menu;
+	bgmType = bgmType_Menu;
+	bgm[bgmType].stop();
+	bgm[bgmType].play();
+	return 0;
+}
+
+int Scene::Load_Scene_Win()
+{
+	ID = scene_win;
+	int tmp = rand() % 3;
+	soundVictory[tmp].play();
+	menuButton = Image(900, 650, 250, 70, 1080, 720, &tBackground, "Main Menu", 40);
 	return 0;
 }
 
@@ -197,16 +236,23 @@ int Scene::Load_Scene_Menu()
 #pragma region Unload
 int Scene::Unload_Scene_MainMenu()
 {
-
+	bgm[bgmType].pause();
 	return 0;
 }
 
 int Scene::Unload_Scene_Battle()
 {
+	bgm[bgmType].pause();
 	return 0;
 }
 
 int Scene::Unload_Scene_Menu()
+{
+	bgm[bgmType].pause();
+	return 0;
+}
+
+int Scene::Unload_Scene_Win()
 {
 	return 0;
 }
@@ -216,6 +262,24 @@ int Scene::Unload_Scene_Menu()
 #pragma region Update
 int Scene::Update_Scene_MainMenu()
 {
+	for(int i = 0;i < 2;i++)
+		if (startButton[i].isSelected())
+		{
+			startButton[i].SetColor(sf::Color(255, 255, 55, 255));
+			if (mouseLeftPressed)
+			{
+				soundStartGame.play();
+				GameMode = i;
+				Unload();
+				Initial_Scene_Battle();
+				Load_Scene_Battle();
+				mouseLeftPressed = false;
+			}
+		}
+		else
+		{
+			startButton[i].SetColor(sf::Color(255, 255, 255, 255));
+		}
 	return 0;
 }
 
@@ -223,26 +287,70 @@ int Scene::Update_Scene_Battle()
 {
 	if (!GameOver)
 	{
-		if (!piece[mainPlayer][0]->Enable() || piece[associatePlayer][0]->getPos() == MAIN_HOME)
+		if (!isPlayingAnimation && (!piece[mainPlayer][0]->Enable() || piece[associatePlayer][0]->getPos() == MAIN_HOME ))
 		{
 			printf("\n蓝方胜利！");
+			winner = associatePlayer;
+			Unload();
+			Load_Scene_Win();
 			GameOver = true;
 		}
-		else if (!piece[associatePlayer][0]->Enable() || piece[mainPlayer][0]->getPos() == ASSOCIATE_HOME)
+		else if (!isPlayingAnimation && (!piece[associatePlayer][0]->Enable() || piece[mainPlayer][0]->getPos() == ASSOCIATE_HOME))
 		{
 			printf("\n红方胜利！");
+			winner = mainPlayer;
+			Unload();
+			Load_Scene_Win();
 			GameOver = true;
 		}
 
-		mark->Update();
 	}
 
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 5; j++)
-			piece[i][j]->Update();
-	for (int i = 0; i < 5; i++)
-		card[i]->Update();
+	//菜单按钮
+	if (menuButton.isSelected())
+	{
+		menuButton.SetColor(sf::Color(255, 255, 55, 255));
+		if (mouseLeftPressed)
+		{
+			Unload();
+			Load_Scene_MainMenu();
+			mouseLeftPressed = false;
+		}
+	}
+	else
+	{
+		menuButton.SetColor(sf::Color(255, 255, 255, 255));
+	}
 
+	if (GameMode == pvp)			//单机双人对弈
+	{
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 5; j++)
+				piece[i][j]->Update();
+		for (int i = 0; i < 5; i++)
+			card[i]->Update();
+		mark->Update();
+	}
+	else if (GameMode == pve)		//人机对弈
+	{
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 5; j++)
+				piece[i][j]->Update();
+		for (int i = 0; i < 5; i++)
+			card[i]->Update();
+		if (currentPlayer == mainPlayer)
+		{
+			mark->Update();
+		}
+		else
+		{
+
+		}
+	}
+	else if (GameMode == online)	//联机对弈
+	{
+
+	}
 
 
 	return 0;
@@ -253,12 +361,34 @@ int Scene::Update_Scene_Menu()
 	return 0;
 }
 
+int Scene::Update_Scene_Win()
+{
+	//菜单按钮
+	if (menuButton.isSelected())
+	{
+		menuButton.SetColor(sf::Color(255, 255, 55, 255));
+		if (mouseLeftPressed)
+		{
+			Unload();
+			Load_Scene_MainMenu();
+			mouseLeftPressed = false;
+		}
+	}
+	else
+	{
+		menuButton.SetColor(sf::Color(255, 255, 255, 255));
+	}
+	return 0;
+}
+
 #pragma endregion
 
 #pragma region Draw
 int Scene::Draw_Scene_MainMenu()
 {
 	window.draw(sLogo);//绘制Logo背景
+	for(int i = 0;i < 3;i++)
+		startButton[i].Draw();
 	return 0;
 }
 
@@ -286,11 +416,30 @@ int Scene::Draw_Scene_Battle()
 
 	mark->Draw();
 	
+	menuButton.Draw();
+
 	return 0;
 }
 
 int Scene::Draw_Scene_Menu()
 {
+	return 0;
+}
+
+int Scene::Draw_Scene_Win()
+{
+	switch (winner)
+	{
+	case mainPlayer:
+		window.draw(sRedWin);
+		break;
+	case associatePlayer:
+		window.draw(sBlueWin);
+		break;
+	default:
+		break;
+	}
+	menuButton.Draw();
 	return 0;
 }
 

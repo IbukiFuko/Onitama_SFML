@@ -1,0 +1,45 @@
+/*********************
+*       指示框       *
+*********************/
+#pragma once
+#include <iostream>
+#include <string>
+#include <SFML/Audio.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
+#include "Value.h"
+#include "Image.h"
+#include "Piece.h"
+#include "Card.h"
+
+#define tSIZE_MARK0_X 120
+#define tSIZE_MARK0_Y 120
+#define tSIZE_MARK1_X 100
+#define tSIZE_MARK1_Y 100
+#define SIZE_MARK0_X 90
+#define SIZE_MARK0_Y 90
+#define SIZE_MARK1_X 83
+#define SIZE_MARK1_Y 84
+
+class Bot
+{
+private:
+	Piece *piece[2][5];//[0主玩家1副玩家][0master1-4servant]
+	Card *card[5];//卡牌
+	int selPiece, selCard;//选中棋子、卡片
+	sf::Vector2i available[4];//可移动位置
+	Image image[6];//标志图像(0选中，1-4可移动位置,5选中卡片)
+	sf::Vector2i imagePos[4];//图像棋盘位置
+	int time;
+public:
+	Bot();
+	Bot(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant3, Piece *_0servant4,
+		Piece *_1master, Piece *_1servant1, Piece *_1servant2, Piece *_1servant3, Piece *_1servant4,
+		Card **_card);
+	void Update();
+
+	int Draw();//绘制标志
+
+	static void Reset();//重置状态
+	void Refresh();//刷新状态
+};

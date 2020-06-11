@@ -56,6 +56,69 @@ int LoadMusic()//加载音乐
 	bgm[bgmType_03].setLoop(true);
 
 	cout << "音乐加载成功。" << endl;
+
+
+	//加载soundSelect
+	if (!bufSelect.loadFromFile("./resource/audio/Onitama_Select.wav"))
+	{
+		cout << "未成功加载Onitama_Select.wav" << endl;
+		return EXIT_FAILURE;
+	}
+	soundSelect.setBuffer(bufSelect);
+
+	//加载soundVictory
+	if (!bufVictory[0].loadFromFile("./resource/audio/Onitama_Victory_Fantasy.wav"))
+	{
+		cout << "未成功加载Onitama_Victory_Fantasy" << endl;
+		return EXIT_FAILURE;
+	}
+	soundVictory[0].setBuffer(bufVictory[0]);
+	if (!bufVictory[1].loadFromFile("./resource/audio/Onitama_Victory_Regular.wav"))
+	{
+		cout << "未成功加载Onitama_Victory_Regular.wav" << endl;
+		return EXIT_FAILURE;
+	}
+	soundVictory[1].setBuffer(bufVictory[1]);
+	if (!bufVictory[2].loadFromFile("./resource/audio/Onitama_Victory_SciFi.wav"))
+	{
+		cout << "未成功加载Onitama_Victory_SciFi.wav" << endl;
+		return EXIT_FAILURE;
+	}
+	soundVictory[2].setBuffer(bufVictory[2]);
+
+	//加载soundNewTurn
+	if (!bufNewTurn.loadFromFile("./resource/audio/Onitama_New Turn.wav"))
+	{
+		cout << "未成功加载Onitama_New Turn.wav" << endl;
+		return EXIT_FAILURE;
+	}
+	soundNewTurn.setBuffer(bufNewTurn);
+
+	//加载soundStartGame
+	if (!bufStartGame.loadFromFile("./resource/audio/Onitama_Start Game.wav"))
+	{
+		cout << "未成功加载Onitama_Start Game.wav" << endl;
+		return EXIT_FAILURE;
+	}
+	soundStartGame.setBuffer(bufStartGame);
+
+	//加载soundMove
+	if (!bufMove.loadFromFile("./resource/audio/Onitama_Unit Movement.wav"))
+	{
+		cout << "未成功加载Onitama_Unit Movement.wav" << endl;
+		return EXIT_FAILURE;
+	}
+	soundMove.setBuffer(bufMove);
+	
+	//加载soundEat
+	if (!bufEat.loadFromFile("./resource/audio/Onitama_Tap Button.wav"))
+	{
+		cout << "未成功加载Onitama_Tap Button.wav" << endl;
+		return EXIT_FAILURE;
+	}
+	soundEat.setBuffer(bufEat);
+
+	cout << "音效加载成功。" << endl;
 	return EXIT_SUCCESS;
 }
 
@@ -68,13 +131,25 @@ int LoadSound()//加载音效
 
 int LoadTexture()//加载图片
 {
-	//加载Logo
+	//加载Logo,RedWin,BlueWin
 	if (!tLogo.loadFromFile("./resource/image/logo.png"))
 	{
 		cout << "未成功加载/logo.png" << endl;
 		return EXIT_FAILURE;
 	}
 	sLogo.setTexture(tLogo);
+	if (!tRedWin.loadFromFile("./resource/image/RedWin.png"))
+	{
+		cout << "未成功加载/RedWin.png" << endl;
+		return EXIT_FAILURE;
+	}
+	sRedWin.setTexture(tRedWin);
+	if (!tBlueWin.loadFromFile("./resource/image/BlueWin.png"))
+	{
+		cout << "未成功加载/BlueWin.png" << endl;
+		return EXIT_FAILURE;
+	}
+	sBlueWin.setTexture(tBlueWin);
 
 	//加载Background
 	if (!tBackground.loadFromFile("./resource/image/background/background01.png"))

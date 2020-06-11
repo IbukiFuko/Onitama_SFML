@@ -38,6 +38,7 @@ int Piece::Move(sf::Vector2i newPos)//棋子移动
 	coordinate.y = COORDINATE.y + position.x * SIZE.y;
 	isPlaying = true;
 	isPlayingAnimation = true;
+	soundMove.play();
 	return 0;
 }
 
@@ -93,6 +94,7 @@ void Piece::Update()
 			image.SetColor(sf::Color(255, 255, 55, 255));
 			if (mouseLeftPressed)
 			{
+				soundSelect.play();
 				selID = selID == ID ? -1 : ID;
 				mouseLeftPressed = false;
 			}
@@ -110,13 +112,14 @@ void Piece::Update()
 			currentPlayer = currentPlayer == mainPlayer ? associatePlayer : mainPlayer;//切换当前玩家
 			isPlayingAnimation = false;
 			isPlaying = false;
+			//soundNewTurn.play();
 		}
 		else
 		{
 			sf::Vector2i deltaSize;
 			if (time > FPS / 2)
 			{
-				deltaSize = (sf::Vector2i(size.x * 1.5, size.y * 1.5) - image.GetSize()) / (time - FPS / 2);
+				deltaSize = (sf::Vector2i((int)(size.x * 1.5), (int)(size.y * 1.5)) - image.GetSize()) / (time - FPS / 2);
 				image.SetSize((image.GetSize() + deltaSize).x, (image.GetSize() + deltaSize).y);
 			}
 			else
@@ -139,6 +142,7 @@ void Piece::Update()
 		else if (delay == 0)
 		{
 			enable = tEnable;
+			soundEat.play();
 			delay = -1;
 		}
 	}

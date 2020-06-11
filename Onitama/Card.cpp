@@ -228,6 +228,7 @@ void Card::Update()
 		image.SetColor(sf::Color(255, 255, 55, 255));
 		if (mouseLeftPressed)
 		{
+			soundSelect.play();
 			selID = selID == ID ? -1 : ID;
 			mouseLeftPressed = false;
 		}

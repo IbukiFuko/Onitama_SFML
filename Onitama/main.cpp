@@ -38,7 +38,7 @@ int main()
 	system("cls");
 	srand((int)time(NULL));//设置随机数种子
 	Init();
-	scene = Scene(scene_battle);
+	scene = Scene(scene_mainMenu);
 	while (window.isOpen())
 	{
 		while (window.isOpen())

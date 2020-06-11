@@ -27,28 +27,28 @@ private:
 	int Load_Scene_MainMenu();
 	int Load_Scene_Battle();
 	int Load_Scene_Menu();
-
+	int Load_Scene_Win();
 #pragma endregion
 
 #pragma region Unload
 	int Unload_Scene_MainMenu();
 	int Unload_Scene_Battle();
 	int Unload_Scene_Menu();
-
+	int Unload_Scene_Win();
 #pragma endregion
 
 #pragma region Update
 	int Update_Scene_MainMenu();
 	int Update_Scene_Battle();
 	int Update_Scene_Menu();
-
+	int Update_Scene_Win();
 #pragma endregion
 
 #pragma region Draw
 	int Draw_Scene_MainMenu();
 	int Draw_Scene_Battle();
 	int Draw_Scene_Menu();
-
+	int Draw_Scene_Win();
 #pragma endregion
 
 
