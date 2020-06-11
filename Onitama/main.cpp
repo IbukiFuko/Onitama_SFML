@@ -104,8 +104,7 @@ void DrawWindow()//绘制窗体
 	window.clear();//清屏, 
 	scene.Draw();//绘制当前场景
 
-	testText = sf::Text("fps" + to_string(FPS) + "\tx: " + to_string(sf::Mouse::getPosition(window).x * WindowWidth / window.getSize().x) + "\ty: " + to_string(sf::Mouse::getPosition(window).y * WindowHeight / window.getSize().y)
-		, font, 20);
+	testText = sf::Text("fps" + to_string(FPS) + "\tx: " + to_string(mousePos.x) + "\ty: " + to_string(mousePos.y), font, 20);
 	//testButton.Draw();
 	window.draw(testText);
 	window.display();//更新窗口

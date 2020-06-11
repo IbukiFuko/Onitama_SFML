@@ -8,3 +8,4 @@
 
 extern Piece *piece[][5];
 extern Mark *mark;
+extern Card *card[];

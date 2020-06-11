@@ -31,12 +31,15 @@ public:
 	int SetSize(int, int);//设置大小
 	int SetSprite(sf::Texture *, int, int);//设置纹理
 	int SetText(std::string, int);//设置文字
+	int Rotate();//旋转
+	int Rotate(int);
 	int SetRotation(float);//设置旋转
 	int Draw();//绘制按钮
 	sf::Vector2i GetPos();//获取位置
 	sf::Vector2i GetSize();//获取大小
 	float GetRotation();//获取旋转
 	sf::Sprite GetSprite();//获取图像
+	bool isSelected();//鼠标是否选中
 
 	void Refresh();//刷新状态
 };

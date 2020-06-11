@@ -6,16 +6,16 @@
 Card::Card()
 {
 	type = 0;
-	isMove = false;
-	image = Image(-100, -100, 1, 1, 1, 1, &tCard[0], "", 6);
+	image = Image(-1000, -1000, 141, 170, 141, 170, &tCard[0], "", 6);
 	SetAvailable();//设置卡片可移动偏移
 }
 
 Card::Card(int _type)
 {
 	type = _type;
-	isMove = false;
-	image = Image(100, 100, 1, 1, 1, 1, &tCard[_type], "", 6);
+	player = 0;
+	deltaRotation = 0;
+	image = Image(-100, -100, 141, 170, 141, 170, &tCard[_type], "", 6);
 	SetAvailable();//设置卡片可移动偏移
 }
 
@@ -118,9 +118,94 @@ int Card::SetAvailable()//设置卡片可移动偏移
 	return 0;
 }
 
+void Card::SetPos(int _cardID, bool isPlay)
+{
+	if(isPlay)
+	{
+		step = 60;
+		switch (_cardID)//设置目标位置
+		{
+		case mainCard0:
+			targetPos = sf::Vector2i(820, 600);
+			player = 0;
+			break;
+		case mainCard1:
+			targetPos = sf::Vector2i(980, 600);
+			player = 0;
+			break;
+		case associateCard0:
+			targetPos = sf::Vector2i(820, 200);
+			player = 1;
+			break;
+		case associateCard1:
+			targetPos = sf::Vector2i(980, 200);
+			player = 1;
+			break;
+		case tmpCard:
+			targetPos = sf::Vector2i(900, 400);
+			player = 2;
+			deltaRotation += 180;
+			break;
+		default:
+			break;
+		}
+	}
+	else
+	{
+		step = 0;
+		switch (_cardID)//设置目标位置
+		{
+		case mainCard0:
+			targetPos = sf::Vector2i(820, 600);
+			player = 0;
+			image.SetRotation(0);
+			break;
+		case mainCard1:
+			targetPos = sf::Vector2i(980, 600);
+			player = 0;
+			image.SetRotation(0);
+			break;
+		case associateCard0:
+			targetPos = sf::Vector2i(820, 200);
+			player = 1;
+			image.SetRotation(180);
+			break;
+		case associateCard1:
+			targetPos = sf::Vector2i(980, 200);
+			player = 1;
+			image.SetRotation(180);
+			break;
+		case tmpCard:
+			targetPos = sf::Vector2i(900, 400);
+			player = 2;
+			image.SetRotation(currentPlayer == mainPlayer ? 0 : 180.0f);
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void Card::Update()
 {
-
+	if (currentPlayer == player && image.isSelected())
+	{
+		printf("\rCard:%d ", type);
+	}
+	//动画
+	if (step == 0)
+	{
+		image.SetPosition(targetPos);
+	}
+	else
+	{
+		sf::Vector2i delta = (targetPos - image.GetPos()) / step;
+		int deltaR = deltaRotation / step;
+		deltaRotation -= deltaR;
+		image.Rotate(deltaR);
+		image.SetPosition(image.GetPos() + delta);
+		step--;
+	}
 }
 
 int Card::Draw()

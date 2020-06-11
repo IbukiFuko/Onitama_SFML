@@ -14,9 +14,11 @@ bool GameOver = false;
 sf::RenderWindow window(sf::VideoMode(WindowWidth, WindowHeight), WindowName);//窗体
 sf::Font font;//字体
 sf::Event event;//事件
+sf::Vector2i mousePos;//鼠标位置
 
 const int MaxPlayer = 2;//玩家最大数量
 int currentPlayer = 0;//当前玩家
+int playerCard[5];//卡牌
 
 sf::Text testText;//测试文字
 

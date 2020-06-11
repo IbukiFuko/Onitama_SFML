@@ -37,6 +37,7 @@ int Scene::Initial_Scene_MainMenu()
 int Scene::Initial_Scene_Battle()
 {
 	bgmType = rand() % 3 + 1;
+	currentPlayer = mainPlayer;
 	for(int i = 0;i < 2;i++)
 		for(int j = 0;j < 5;j++)
 			free(piece[i][j]);
@@ -55,9 +56,24 @@ int Scene::Initial_Scene_Battle()
 	mark = new Mark(piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
 					piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4]);
 
+	int tmp[16] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15 };
+	int randomNum, tmpNum;
+	for (int i = 15; i > 0; i--)
+	{
+		randomNum = rand() % (i + 1);
+		tmpNum = tmp[i];
+		tmp[i] = tmp[randomNum];
+		tmp[randomNum] = tmpNum;
+	}
+	for (int i = 0; i < 5; i++)
+	{
+		free(card[i]);
+		card[i] = new Card(tmp[i]);
+		card[i]->SetPos(i, false);//设置画面坐标
+		playerCard[i] = i;//分配玩家手牌
+	}
+	
 
-	//Mark(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant3, Piece *_0servant4,
-	//	Piece *_1master, Piece *_1servant1, Piece *_1servant2, Piece *_1servant3, Piece *_1servant4);
 	return 0;
 }
 
@@ -124,6 +140,8 @@ int Scene::Update()
 	default:
 		break;
 	}
+	mousePos.x = sf::Mouse::getPosition(window).x * WindowWidth / window.getSize().x;
+	mousePos.y = sf::Mouse::getPosition(window).y * WindowHeight / window.getSize().y;
 	return 0;
 }
 
@@ -191,6 +209,12 @@ int Scene::Update_Scene_MainMenu()
 
 int Scene::Update_Scene_Battle()
 {
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 5; j++)
+			piece[i][j]->Update();
+	mark->Update();
+	for (int i = 0; i < 5; i++)
+		card[i]->Update();
 	return 0;
 }
 
@@ -218,6 +242,8 @@ int Scene::Draw_Scene_Battle()
 			if (piece[i][j]->Enable())
 				piece[i][j]->Draw();
 	mark->Draw();
+	for (int i = 0; i < 5; i++)
+		card[i]->Draw();
 	return 0;
 }
 

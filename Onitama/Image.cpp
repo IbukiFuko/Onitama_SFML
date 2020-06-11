@@ -59,6 +59,20 @@ int Image::SetText(std::string str, int size)//设置文字
 	return 0;
 }
 
+int Image::Rotate()//旋转
+{
+	rotation++;
+	Refresh();
+	return 0;
+}
+
+int Image::Rotate(int _delta)
+{
+	for (int i = 0; i < _delta; i++)
+		Rotate();
+	return 0;
+}
+
 int Image::SetRotation(float _rotation)//设置旋转
 {
 	rotation = _rotation;
@@ -94,6 +108,21 @@ sf::Sprite Image::GetSprite()//获取图像
 	return sImage;
 }
 
+bool Image::isSelected()//鼠标是否选中
+{
+	if (mousePos.x >= position.x - imageWidth / 2.0f && mousePos.x <= position.x + imageWidth / 2.0f
+		&& mousePos.y >= position.y - imageHeight / 2.0f && mousePos.y <= position.y + imageHeight / 2.0f)
+	{
+		sImage.setColor(sf::Color(255, 255, 0, 255));
+		return true;
+	}
+	else
+	{
+		sImage.setColor(sf::Color(255, 255, 255, 255));
+		return false;
+	}
+}
+
 void Image::Refresh()//刷新状态
 {
 	if (!flag)
@@ -101,6 +130,8 @@ void Image::Refresh()//刷新状态
 	sImage.setOrigin(spriteWidth / 2.0f, spriteHeight / 2.0f);
 	sImage.setPosition(1.0f * position.x, 1.0f * position.y);
 	sImage.setScale(1.0f * imageWidth / spriteWidth, 1.0f * imageHeight / spriteHeight);
+	if (rotation >= 360)
+		rotation -= 360;
 	sImage.setRotation(rotation);
 	Text.setPosition(position.x - strSize*strLength/4.0f, position.y - strSize*2/3.0f);
 	Text.setRotation(rotation);

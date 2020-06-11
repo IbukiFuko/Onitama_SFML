@@ -18,13 +18,17 @@ class Card
 {
 private:
 	int type;//卡牌编号
-	bool isMove;//是否移动中
+	int player;//阵营(0main,1associate,2tmp)
 	bool available[CARD_MAX_Y][CARD_MAX_X];//可移动的偏移
+	sf::Vector2i targetPos;//当前位置，目标位置
+	int deltaRotation;//需要旋转的角度
+	int step;//步数
 	Image image;//图片
 	int SetAvailable();//设置卡片可移动偏移
 public:
 	Card();
 	Card(int);
+	void SetPos(int, bool);//设置卡牌坐标
 	void Update();
 	int Draw();
 };
