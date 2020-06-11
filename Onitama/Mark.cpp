@@ -39,8 +39,8 @@ Mark::Mark(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0serva
 void Mark::Update()
 {
 	time++;
-	if (time == FPS)
-		time = 0;
+	if (time == FPS * 2)
+		time = FPS;
 	if (selCard == -1)
 		time = 0;
 	//选中棋子
@@ -88,10 +88,47 @@ void Mark::Update()
 			{
 				int j = 0;
 				for (j = 0; j < 5; j++)
-					if (piece[currentPlayer][j]->getPos() == available[i])
+					if (piece[currentPlayer][j]->getPos() == available[i] && piece[currentPlayer][j]->Enable())
 						break;
-				if(j == 5)
-					image[count++].SetPosition(sf::Vector2i(COORDINATE.x + available[i].y * SIZE.x, COORDINATE.y + available[i].x * SIZE.y));
+				if (j == 5)
+				{
+					image[count].SetPosition(sf::Vector2i(COORDINATE.x + available[i].y * SIZE.x, COORDINATE.y + available[i].x * SIZE.y));
+					imagePos[count] = available[i];
+					count++;
+				}
+			}
+		}
+	}
+	for (int i = 1; i < 5; i++)
+	{
+		if (image[i].isSelected())
+		{
+			if (mouseLeftPressed)
+			{
+				//棋子操作
+				piece[currentPlayer][selPiece]->Move(imagePos[i]);
+				for (int j = 0; j < 5; j++)
+					if (piece[currentPlayer == mainPlayer ? associatePlayer : mainPlayer][j]->getPos() == imagePos[i])
+						piece[currentPlayer == mainPlayer ? associatePlayer : mainPlayer][j]->SetEnable(false,FPS);
+				//卡片操作
+				int tmpIndex = -1,tmpVal;
+				for(int j = 0;j < 5;j++)//找到selCard对应的playerCard的下标
+					if (card[playerCard[j]]->getID() == card[selCard]->getID())
+					{
+						tmpIndex = j;
+						break;
+					}
+				//交换位置
+				card[playerCard[tmpCard]]->SetPos(tmpIndex, true);
+				card[selCard]->SetPos(tmpCard, true);
+				tmpVal = playerCard[tmpIndex];
+				playerCard[tmpIndex] = playerCard[tmpCard];
+				playerCard[tmpCard] = tmpVal;
+
+
+				Reset();
+				mouseLeftPressed = false;
+				break;
 			}
 		}
 	}
@@ -103,7 +140,7 @@ int Mark::Draw()
 	{
 		image[i].Draw();
 	}
-	if (time <= FPS * 4 / 5)
+	if (time <= FPS * 9 / 5)//呼吸灯效果
 		image[5].Draw();
 	return 0;
 }

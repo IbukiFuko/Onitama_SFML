@@ -38,7 +38,12 @@ int Scene::Initial_Scene_Battle()
 {
 	bgmType = rand() % 3 + 1;
 	bgm[bgmType].play();
-	currentPlayer = 0;
+	currentPlayer = rand() % 2;
+	if (currentPlayer == mainPlayer)
+		printf("\n红方先!");
+	else
+		printf("\n蓝方先!");
+	GameOver = false;
 	for(int i = 0;i < 2;i++)
 		for(int j = 0;j < 5;j++)
 			free(piece[i][j]);
@@ -216,12 +221,30 @@ int Scene::Update_Scene_MainMenu()
 
 int Scene::Update_Scene_Battle()
 {
+	if (!GameOver)
+	{
+		if (!piece[mainPlayer][0]->Enable() || piece[associatePlayer][0]->getPos() == MAIN_HOME)
+		{
+			printf("\n蓝方胜利！");
+			GameOver = true;
+		}
+		else if (!piece[associatePlayer][0]->Enable() || piece[mainPlayer][0]->getPos() == ASSOCIATE_HOME)
+		{
+			printf("\n红方胜利！");
+			GameOver = true;
+		}
+
+		mark->Update();
+	}
+
 	for (int i = 0; i < 2; i++)
 		for (int j = 0; j < 5; j++)
 			piece[i][j]->Update();
-	mark->Update();
 	for (int i = 0; i < 5; i++)
 		card[i]->Update();
+
+
+
 	return 0;
 }
 
@@ -243,10 +266,20 @@ int Scene::Draw_Scene_Battle()
 {
 	window.draw(sBackground);
 	window.draw(sChessboard);
-	for (int i = 0; i < 2; i++)
-		for (int j = 0; j < 5; j++)
-			if (piece[i][j]->Enable())
-				piece[i][j]->Draw();
+	if (currentPlayer == mainPlayer)//当前玩家的棋子绘制在上方
+	{
+		for (int i = 1; i > -1; i--)
+			for (int j = 0; j < 5; j++)
+				if (piece[i][j]->Enable())
+					piece[i][j]->Draw();
+	}
+	else
+	{
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 5; j++)
+				if (piece[i][j]->Enable())
+					piece[i][j]->Draw();
+	}
 
 	for (int i = 0; i < 5; i++)
 		card[i]->Draw();
@@ -262,3 +295,10 @@ int Scene::Draw_Scene_Menu()
 }
 
 #pragma endregion
+
+int Scene::Restart()
+{
+	bgm[bgmType].stop();
+	Initial_Scene_Battle();
+	return 0;
+}

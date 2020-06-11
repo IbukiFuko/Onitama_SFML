@@ -59,4 +59,5 @@ public:
 	int Unload();//卸载场景
 	int Update();//场景逻辑
 	int Draw();//场景绘制
+	int Restart();//重新开始
 };

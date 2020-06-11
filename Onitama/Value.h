@@ -11,6 +11,8 @@
 #define MAX_CARD_NUM 16
 #define COORDINATE sf::Vector2i(111,103)//棋盘左上坐标
 #define SIZE sf::Vector2i(130,129)//棋盘格子像素大小
+#define MAIN_HOME sf::Vector2i(4,2)//主玩家老家
+#define ASSOCIATE_HOME sf::Vector2i(0,2)//副玩家老家
 
 
 extern const int WindowWidth, WindowHeight;	//窗体大小

@@ -223,13 +223,12 @@ int Card::getAvailable(sf::Vector2i *a, sf::Vector2i *b, sf::Vector2i *c, sf::Ve
 
 void Card::Update()
 {
-	if (currentPlayer == player && image.isSelected())
+	if (!GameOver && currentPlayer == player && image.isSelected())
 	{
 		image.SetColor(sf::Color(255, 255, 55, 255));
 		if (mouseLeftPressed)
 		{
 			selID = selID == ID ? -1 : ID;
-			printf("\rCard:%d                            ", type);
 			mouseLeftPressed = false;
 		}
 	}

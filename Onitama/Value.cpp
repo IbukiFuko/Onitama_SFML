@@ -11,6 +11,7 @@ const int FPS = 60;//Ö¡ÂÊ
 extern int objectID = 0;//object»¥³âid
 
 bool GameOver = false;
+bool isPlayingAnimation = false;
 
 sf::RenderWindow window(sf::VideoMode(WindowWidth, WindowHeight), WindowName);//´°Ìå
 sf::Font font;//×ÖÌå

@@ -15,6 +15,8 @@ Piece::Piece(int _type, bool _isMainPlayer, sf::Vector2i _position)
 	ID = objectID++;
 	enable = true;
 	type = _type;
+	time = 0;
+	delay = -1;
 	if (_isMainPlayer)
 		player = mainPlayer;
 	else
@@ -23,13 +25,19 @@ Piece::Piece(int _type, bool _isMainPlayer, sf::Vector2i _position)
 	coordinate.x = COORDINATE.x + _position.y * SIZE.x;
 	coordinate.y = COORDINATE.y + _position.x * SIZE.y;
 	image = Image(coordinate.x, coordinate.y, type == 0 ? tSIZE_MASTER_X : tSIZE_SERVANT_X, type == 0 ? tSIZE_MASTER_X : tSIZE_SERVANT_X, type == 0 ? SIZE_MASTER_X : SIZE_SERVANT_X, type == 0 ? SIZE_MASTER_Y : SIZE_SERVANT_Y, &tPiece[player][type], "", 6);
+	size = image.GetSize();
+	isPlaying = false;
 	Refresh();
 }
 
-int Piece::Move(sf::Vector2i delta)//棋子移动
+int Piece::Move(sf::Vector2i newPos)//棋子移动
 {
-	position = position + delta;//逻辑位置
-	Refresh();
+	time = FPS;
+	position = newPos;
+	coordinate.x = COORDINATE.x + position.y * SIZE.x;
+	coordinate.y = COORDINATE.y + position.x * SIZE.y;
+	isPlaying = true;
+	isPlayingAnimation = true;
 	return 0;
 }
 
@@ -58,6 +66,17 @@ bool Piece::IsHere(sf::Vector2i _position)//是否存在
 	return (position == _position);
 }
 
+void Piece::SetEnable(bool _flag)//设置可用
+{
+	enable = _flag;
+}
+
+void Piece::SetEnable(bool _flag, int _delay)//设置可用
+{
+	tEnable = _flag;
+	delay = _delay;
+}
+
 bool Piece::Enable()
 {
 	return enable;
@@ -67,19 +86,61 @@ void Piece::Update()
 {
 	if (!enable)
 		return;
-	if (currentPlayer == player && image.isSelected())
+	if (!isPlayingAnimation)
 	{
-		image.SetColor(sf::Color(255, 255, 55, 255));
-		if (mouseLeftPressed)
+		if (!GameOver && currentPlayer == player && image.isSelected())
 		{
-			selID = selID == ID ? -1 : ID;
-			printf("\r%s:%s                            ", player == mainPlayer ? "mainPlayer" : "associatePlayer", type == 0 ? "Master" : "Servant");
-			mouseLeftPressed = false;
+			image.SetColor(sf::Color(255, 255, 55, 255));
+			if (mouseLeftPressed)
+			{
+				selID = selID == ID ? -1 : ID;
+				mouseLeftPressed = false;
+			}
+		}
+		else
+		{
+			image.SetColor(sf::Color(255, 255, 255, 255));
 		}
 	}
-	else
+	else if(isPlaying)//播放动画
 	{
-		image.SetColor(sf::Color(255, 255, 255, 255));
+		if (time == 0)
+		{
+			Refresh();
+			currentPlayer = currentPlayer == mainPlayer ? associatePlayer : mainPlayer;//切换当前玩家
+			isPlayingAnimation = false;
+			isPlaying = false;
+		}
+		else
+		{
+			sf::Vector2i deltaSize;
+			if (time > FPS / 2)
+			{
+				deltaSize = (sf::Vector2i(size.x * 1.5, size.y * 1.5) - image.GetSize()) / (time - FPS / 2);
+				image.SetSize((image.GetSize() + deltaSize).x, (image.GetSize() + deltaSize).y);
+			}
+			else
+			{
+				deltaSize = (image.GetSize() - size) / time;
+				image.SetSize((image.GetSize() - deltaSize).x, (image.GetSize() - deltaSize).y);
+			}
+			sf::Vector2i delta = (coordinate - image.GetPos()) / time;
+			image.SetPosition(image.GetPos() + delta);
+			time--;
+		}
+	}
+
+	if (delay != -1)
+	{
+		if (delay > 0)
+		{
+			delay--;
+		}
+		else if (delay == 0)
+		{
+			enable = tEnable;
+			delay = -1;
+		}
 	}
 }
 
@@ -101,4 +162,5 @@ void Piece::Refresh()//刷新状态
 	coordinate.x = COORDINATE.x + position.y * SIZE.x;
 	coordinate.y = COORDINATE.y + position.x * SIZE.y;
 	image.SetPosition(coordinate);
+	image.SetSize(size.x, size.y);
 }

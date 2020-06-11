@@ -32,7 +32,12 @@ private:
 	int player;////阵营(0main,1associate,2tmp)
 	sf::Vector2i position;//棋盘坐标
 	sf::Vector2i coordinate;//像素坐标
+	int time;//动画时间
+	int delay;
+	bool tEnable;
 	Image image;//棋子图像
+	bool isPlaying;
+	sf::Vector2i size;
 public:
 	Piece();
 	Piece(int, bool, sf::Vector2i);
@@ -42,6 +47,8 @@ public:
 	int getID();//获取ID
 	int getSelID();
 	bool IsHere(sf::Vector2i);//是否存在
+	void SetEnable(bool);//设置可用
+	void SetEnable(bool, int);//设置可用
 	bool Enable();//是否可用
 	void Update();
 	int Draw();//绘制棋子
