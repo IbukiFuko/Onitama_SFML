@@ -18,6 +18,7 @@ extern const int StageWidth, StageHeight;		//舞台大小
 extern const wchar_t* WindowName;//窗体名称
 extern const int FPS;//帧率
 
+extern int objectID;//object互斥id
 
 extern bool GameOver;
 
@@ -70,3 +71,8 @@ extern sf::Texture tPiece[][2], tMark[], tCard[];
 extern sf::Sprite sPiece[][2], sMark[];
 extern sf::Vector2i sizeLogo;
 extern sf::IntRect a;
+
+//事件相关
+extern bool mouseLeftPressed;//鼠标左键按下
+
+void resetEvent();

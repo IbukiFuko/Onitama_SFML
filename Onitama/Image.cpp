@@ -113,7 +113,20 @@ bool Image::isSelected()//鼠标是否选中
 	if (mousePos.x >= position.x - imageWidth / 2.0f && mousePos.x <= position.x + imageWidth / 2.0f
 		&& mousePos.y >= position.y - imageHeight / 2.0f && mousePos.y <= position.y + imageHeight / 2.0f)
 	{
-		sImage.setColor(sf::Color(255, 255, 0, 255));
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+
+bool Image::isSelected(sf::Color _color)//鼠标是否选中(遮罩)
+{
+	if (mousePos.x >= position.x - imageWidth / 2.0f && mousePos.x <= position.x + imageWidth / 2.0f
+		&& mousePos.y >= position.y - imageHeight / 2.0f && mousePos.y <= position.y + imageHeight / 2.0f)
+	{
+		sImage.setColor(_color);
 		return true;
 	}
 	else

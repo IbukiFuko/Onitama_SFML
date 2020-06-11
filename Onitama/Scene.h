@@ -44,7 +44,7 @@ private:
 
 #pragma endregion
 
-#pragma region Event
+#pragma region Draw
 	int Draw_Scene_MainMenu();
 	int Draw_Scene_Battle();
 	int Draw_Scene_Menu();

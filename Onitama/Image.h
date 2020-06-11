@@ -40,6 +40,7 @@ public:
 	float GetRotation();//获取旋转
 	sf::Sprite GetSprite();//获取图像
 	bool isSelected();//鼠标是否选中
+	bool isSelected(sf::Color );//鼠标是否选中(遮罩)
 
 	void Refresh();//刷新状态
 };

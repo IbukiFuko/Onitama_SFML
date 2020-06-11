@@ -8,6 +8,7 @@ const int StageWidth = 1080, StageHeight = 720;		//舞台大小
 const wchar_t* WindowName = L"Onitama（李琛承）";//窗体名称
 const int FPS = 60;//帧率
 
+extern int objectID = 0;//object互斥id
 
 bool GameOver = false;
 
@@ -30,3 +31,10 @@ sf::Texture tPiece[2][2], tMark[2], tCard[MAX_CARD_NUM];
 sf::Sprite sPiece[2][2], sMark[2];
 sf::Vector2i sizeLogo;
 sf::IntRect tmp;
+
+bool mouseLeftPressed = false;//鼠标左键按下
+
+void resetEvent()
+{
+	mouseLeftPressed = false;
+}

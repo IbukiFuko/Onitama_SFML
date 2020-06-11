@@ -25,9 +25,11 @@
 class Piece//棋子
 {
 private:
+	int ID;
+	static int selID;
 	bool enable;//是否可用
 	int type;//棋子类型(大师0、弟子1)
-	bool isMainPlayer;//是否为主玩家(0是，1否)
+	int player;////阵营(0main,1associate,2tmp)
 	sf::Vector2i position;//棋盘坐标
 	sf::Vector2i coordinate;//像素坐标
 	Image image;//棋子图像
@@ -37,6 +39,8 @@ public:
 	int Move(sf::Vector2i);//棋子移动
 	sf::Vector2i getPos();//获取位置
 	sf::Vector2i getCoordinate();//获取坐标
+	int getID();//获取ID
+	int getSelID();
 	bool IsHere(sf::Vector2i);//是否存在
 	bool Enable();//是否可用
 	void Update();

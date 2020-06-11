@@ -188,9 +188,9 @@ void Card::SetPos(int _cardID, bool isPlay)
 
 void Card::Update()
 {
-	if (currentPlayer == player && image.isSelected())
+	if (currentPlayer == player && image.isSelected(sf::Color(255,255,55,255)))
 	{
-		printf("\rCard:%d ", type);
+		printf("\rCard:%d                            ", type);
 	}
 	//¶¯»­
 	if (step == 0)

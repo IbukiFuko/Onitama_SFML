@@ -43,6 +43,7 @@ int main()
 	{
 		while (window.isOpen())
 		{
+			resetEvent();//重置事件
 			if (Event() == 1)//事件响应
 			{
 				break;
@@ -82,12 +83,17 @@ int Event()//事件响应
 		}	
 		if (event.type == sf::Event::MouseMoved)
 		{
-			//testButton.SetPosition(sf::Mouse::getPosition(window).x * WindowWidth / window.getSize().x, sf::Mouse::getPosition(window).y * WindowHeight / window.getSize().y);
-			//player1.setPosition(sf::Mouse::getPosition(window).x * WindowWidth / window.getSize().x - rectWidth / 2, player1.getPosition().y);
+			mousePos.x = sf::Mouse::getPosition(window).x * WindowWidth / window.getSize().x;
+			mousePos.y = sf::Mouse::getPosition(window).y * WindowHeight / window.getSize().y;
+		}
+		if (event.type == sf::Event::MouseButtonPressed && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+		{
+			mouseLeftPressed = true;
 		}
 	}
 	if (!GameOver)
 	{
+
 	}
 	else
 	{

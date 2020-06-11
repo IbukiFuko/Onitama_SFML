@@ -37,6 +37,7 @@ int Scene::Initial_Scene_MainMenu()
 int Scene::Initial_Scene_Battle()
 {
 	bgmType = rand() % 3 + 1;
+	bgm[bgmType].play();
 	currentPlayer = mainPlayer;
 	for(int i = 0;i < 2;i++)
 		for(int j = 0;j < 5;j++)
@@ -140,8 +141,6 @@ int Scene::Update()
 	default:
 		break;
 	}
-	mousePos.x = sf::Mouse::getPosition(window).x * WindowWidth / window.getSize().x;
-	mousePos.y = sf::Mouse::getPosition(window).y * WindowHeight / window.getSize().y;
 	return 0;
 }
 
