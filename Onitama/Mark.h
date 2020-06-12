@@ -29,7 +29,7 @@ private:
 	int selPiece, selCard;//选中棋子、卡片
 	sf::Vector2i available[4];//可移动位置
 	Image image[6];//标志图像(0选中，1-4可移动位置,5选中卡片)
-	sf::Vector2i imagePos[4];//图像棋盘位置
+	sf::Vector2i imagePos[5];//图像棋盘位置
 	int time;
 public:
 	Mark();

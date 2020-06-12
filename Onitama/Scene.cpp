@@ -84,6 +84,7 @@ int Scene::Initial_Scene_Battle()
 	mark = new Mark(piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
 		piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4], card);
 
+	free(bot);
 	bot = new Bot(piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
 		piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4], card);
 
@@ -123,6 +124,7 @@ int Scene::Unload()
 
 int Scene::Load()
 {
+	window.setTitle(L"Onitama（李琛承）");
 	switch (ID)
 	{
 	case scene_mainMenu:
@@ -285,27 +287,6 @@ int Scene::Update_Scene_MainMenu()
 
 int Scene::Update_Scene_Battle()
 {
-	if (!GameOver)
-	{
-		if (!isPlayingAnimation && (!piece[mainPlayer][0]->Enable() || piece[associatePlayer][0]->getPos() == MAIN_HOME ))
-		{
-			printf("\n蓝方胜利！");
-			winner = associatePlayer;
-			Unload();
-			Load_Scene_Win();
-			GameOver = true;
-		}
-		else if (!isPlayingAnimation && (!piece[associatePlayer][0]->Enable() || piece[mainPlayer][0]->getPos() == ASSOCIATE_HOME))
-		{
-			printf("\n红方胜利！");
-			winner = mainPlayer;
-			Unload();
-			Load_Scene_Win();
-			GameOver = true;
-		}
-
-	}
-
 	//菜单按钮
 	if (menuButton.isSelected())
 	{
@@ -320,6 +301,32 @@ int Scene::Update_Scene_Battle()
 	else
 	{
 		menuButton.SetColor(sf::Color(255, 255, 255, 255));
+	}
+
+	if (!GameOver)
+	{
+		if (!isPlayingAnimation && (!piece[mainPlayer][0]->Enable() || piece[associatePlayer][0]->getPos() == MAIN_HOME))
+		{
+			printf("\n蓝方胜利！");
+			winner = associatePlayer;
+			Unload();
+			Load_Scene_Win();
+			GameOver = true;
+			return 0;
+		}
+		else if (!isPlayingAnimation && (!piece[associatePlayer][0]->Enable() || piece[mainPlayer][0]->getPos() == ASSOCIATE_HOME))
+		{
+			printf("\n红方胜利！");
+			winner = mainPlayer;
+			Unload();
+			Load_Scene_Win();
+			GameOver = true;
+			return 0;
+		}
+	}
+	else
+	{
+		return 0;
 	}
 
 	if (GameMode == pvp)			//单机双人对弈
@@ -342,16 +349,25 @@ int Scene::Update_Scene_Battle()
 		{
 			mark->Update();
 		}
-		else
+		else if(currentPlayer == associatePlayer)
 		{
-
+			if(!(!isPlayingAnimation && (!piece[mainPlayer][0]->Enable() || piece[associatePlayer][0]->getPos() == MAIN_HOME)||
+				!isPlayingAnimation && (!piece[associatePlayer][0]->Enable() || piece[mainPlayer][0]->getPos() == ASSOCIATE_HOME)))
+				bot->Update();
 		}
 	}
 	else if (GameMode == online)	//联机对弈
 	{
 
 	}
-
+	if (currentPlayer == mainPlayer)
+	{
+		window.setTitle(L"Onitama（李琛承）--红方回合");
+	}
+	else
+	{
+		window.setTitle(L"Onitama（李琛承）--蓝方回合");
+	}
 
 	return 0;
 }
@@ -415,6 +431,7 @@ int Scene::Draw_Scene_Battle()
 		card[i]->Draw();
 
 	mark->Draw();
+	bot->Draw();
 	
 	menuButton.Draw();
 

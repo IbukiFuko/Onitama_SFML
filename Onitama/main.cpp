@@ -10,14 +10,6 @@
 #include "Scene.h"
 #include "Object.h"
 
-/***************************
-待补充：
-Card.cpp、Mark.cpp
-修改位图当前大小和原大小信息
-Object.cpp
-初始场景指针位置
-
-****************************/
 
 using namespace std;
 
@@ -119,6 +111,6 @@ void DrawWindow()//绘制窗体
 
 	testText = sf::Text("fps" + to_string(FPS) + "\tx: " + to_string(mousePos.x) + "\ty: " + to_string(mousePos.y), font, 20);
 	//testButton.Draw();
-	window.draw(testText);
+	//window.draw(testText);
 	window.display();//更新窗口
 }
