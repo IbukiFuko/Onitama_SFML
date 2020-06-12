@@ -8,10 +8,11 @@ Bot::Bot()
 
 }
 
-Bot::Bot(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant3, Piece *_0servant4,
+Bot::Bot(int _player, Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant3, Piece *_0servant4,
 	Piece *_1master, Piece *_1servant1, Piece *_1servant2, Piece *_1servant3, Piece *_1servant4,
 	Card **_card)
 {
+	player = _player;
 	selPiece = -1, selCard = -1;
 	time = 0;
 
@@ -38,16 +39,18 @@ Bot::Bot(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant
 
 void Bot::Update()
 {
+	int max = std::numeric_limits<int>::lowest();
+	int val = -1;
 	time++;
 	if (time == FPS * 2)
 		time = FPS;
 	if (selCard == -1)
 		time = 0;
-	if (isPlayingAnimation || currentPlayer == mainPlayer)
+	if (isPlayingAnimation || currentPlayer != player)
 		return;
 	for (int k = 0; k < 5; k++)
 	{
-		if (!piece[currentPlayer][k]->Enable())
+		if (!piece[player][k]->Enable())
 		{
 			for (int l = 0; l < 4; l++)
 			{
@@ -62,6 +65,8 @@ void Bot::Update()
 				Weights[k][l - 2][m] = std::numeric_limits<int>::lowest();;//初始化权重
 			selPiece = k;
 			selCard  = l;
+			if (player == mainPlayer)
+				selCard -= 2;
 			//可移动位置
 			int count = 1, sum = 0;
 			for (int i = 1; i < 5; i++)
@@ -89,16 +94,37 @@ void Bot::Update()
 							Weights[k][l - 2][count - 1] = 0;
 							if(selPiece == 0)
 								Weights[k][l - 2][count - 1] -= 2;
-							Weights[k][l - 2][count - 1] -= piece[associatePlayer][selPiece]->getPos().x;//优先后排
-							if (imagePos[count].x < piece[associatePlayer][selPiece]->getPos().x)//优先前进
-								Weights[k][l - 2][count - 1] -= 1;
+							if(player == associatePlayer)
+								Weights[k][l - 2][count - 1] -= piece[player][selPiece]->getPos().x;//优先后排
 							else
-								Weights[k][l - 2][count - 1] += 1;
-							if ((selPiece == 0 && imagePos[count] == MAIN_HOME) || imagePos[count] == piece[mainPlayer][0]->getPos())//胜利，高优先级
-								Weights[k][l - 2][count - 1] += 1000000;
+								Weights[k][l - 2][count - 1] += piece[player][selPiece]->getPos().x;//优先后排
+							if (imagePos[count].x < piece[player == mainPlayer ? associatePlayer : mainPlayer][0]->getPos().x)//优先前进
+							{
+								if(player == associatePlayer)
+									Weights[k][l - 2][count - 1] -= 5;
+								else
+									Weights[k][l - 2][count - 1] += 5;
+							}
+							else
+							{
+								if (player == associatePlayer)
+									Weights[k][l - 2][count - 1] += 5;
+								else
+									Weights[k][l - 2][count - 1] -= 5;
+							}
+							if ((selPiece == 0 && player == associatePlayer ? (imagePos[count] == MAIN_HOME) : (imagePos[count] == ASSOCIATE_HOME)) || imagePos[count] == piece[player == mainPlayer ? associatePlayer : mainPlayer][0]->getPos())//胜利，高优先级
+							{
+								Weights[k][l - 2][count - 1] += 10000000;
+								selPiece = k;
+								selCard = l;
+								val = count;
+								if (player == mainPlayer)
+									selCard -= 2;
+								goto Label;
+							}
 							for (int m = 1; m < 5; m++)
 							{
-								if (imagePos[count] == piece[mainPlayer][m]->getPos())//吃子，一般优先级
+								if (imagePos[count] == piece[player == mainPlayer ? associatePlayer : mainPlayer][m]->getPos())//吃子，一般优先级
 									Weights[k][l - 2][count - 1] += 10000;
 							}
 							count++;
@@ -110,7 +136,7 @@ void Bot::Update()
 			//下一回合
 			for (int o = 0; o < 5; o++)
 			{
-				if (!piece[mainPlayer][o]->Enable())
+				if (!piece[player == mainPlayer ? associatePlayer : mainPlayer][o]->Enable())
 				{
 					continue;
 				}
@@ -118,6 +144,8 @@ void Bot::Update()
 				{
 					selPiece = o;
 					selCard = p;
+					if (player == mainPlayer)
+						selCard += 2;
 					//可移动位置
 					int count = 1, sum = 0;
 					for (int i = 1; i < 5; i++)
@@ -127,26 +155,28 @@ void Bot::Update()
 						sum = card[playerCard[selCard]]->getAvailable(&available[0], &available[1], &available[2], &available[3]);
 						for (int i = 0; i < sum; i++)
 						{
-							available[i].x += piece[mainPlayer][selPiece]->getPos().x;
-							available[i].y += piece[mainPlayer][selPiece]->getPos().y;
+							if ((player == mainPlayer ? associatePlayer : mainPlayer) == associatePlayer)
+								available[i] *= -1;
+							available[i].x += piece[player == mainPlayer ? associatePlayer : mainPlayer][selPiece]->getPos().x;
+							available[i].y += piece[player == mainPlayer ? associatePlayer : mainPlayer][selPiece]->getPos().y;
 							if (available[i].x >= 0 && available[i].x <= 4 && available[i].y >= 0 && available[i].y <= 4)
 							{
 								int j = 0;
 								for (j = 0; j < 5; j++)
-									if (piece[mainPlayer][j]->getPos() == available[i] && piece[mainPlayer][j]->Enable())
+									if (piece[player == mainPlayer ? associatePlayer : mainPlayer][j]->getPos() == available[i] && piece[player == mainPlayer ? associatePlayer : mainPlayer][j]->Enable())
 										break;
 								if (j == 5)
 								{
 									image[count].SetPosition(sf::Vector2i(COORDINATE.x + available[i].y * SIZE.x, COORDINATE.y + available[i].x * SIZE.y));
 									imagePos[count] = available[i];
-									if ((selPiece == 0 && imagePos[count] == ASSOCIATE_HOME) )//胜利，高优先级
+									if ((selPiece == 0 && imagePos[count] == ASSOCIATE_HOME))//胜利，高优先级
 										Weights[o][l - 2][count - 1] -= 10000000;
 									for (int m = 1; m < 5; m++)
 									{
-										if (imagePos[count] == piece[associatePlayer][m]->getPos())//吃子，一般优先级
+										if (imagePos[count] == piece[player][m]->getPos())//吃子，一般优先级
 											Weights[o][l - 2][count - 1] -= 1000;
 									}
-									if (imagePos[count] == piece[associatePlayer][0]->getPos())
+									if (imagePos[count] == piece[player][0]->getPos())
 									{
 										for (int n = 0; n < 2; n++)
 										{
@@ -171,7 +201,6 @@ void Bot::Update()
 	}
 	selPiece = -1;
 	selCard  = -1;
-	int max = std::numeric_limits<int>::lowest();
 	//system("cls");
 	for(int i = 0;i < 5;i++)
 		for (int j = 0; j < 2; j++)
@@ -185,20 +214,27 @@ void Bot::Update()
 				{
 					selPiece = i;
 					selCard = j + 2;
+					if (player == mainPlayer)
+						selCard -= 2;
+					val = k + 1;
 					max = Weights[i][j][k];
 				}
 				else if (Weights[i][j][k] == max)
 				{
-					if (rand() % 10 > 5)
+					if (rand() % 10 > 7)
 					{
 						selPiece = i;
 						selCard = j + 2;
+						if (player == mainPlayer)
+							selCard -= 2;
+						val = k + 1;
 					}
 				}
 			}
 		}
 	//printf("max:%d\n", max);
 
+Label:
 	//可移动位置
 	int count = 1, sum = 0;
 	for (int i = 1; i < 5; i++)
@@ -227,16 +263,16 @@ void Bot::Update()
 			}
 		}
 	}
-
+	imagePos[0] = imagePos[val];
 	//执行操作(目标位置为imagePos[0])
 	if (selCard != -1 && selPiece != -1)
 	{
 		image[0].SetPosition(piece[currentPlayer][selPiece]->getCoordinate());//绘制棋子选中框
 		image[5].SetPosition(card[playerCard[selCard]]->getPos());//绘制卡牌选中框
 		//棋子操作
-		piece[currentPlayer][selPiece]->Move(imagePos[1]);
+		piece[currentPlayer][selPiece]->Move(imagePos[0]);
 		for (int j = 0; j < 5; j++)
-			if (piece[currentPlayer == mainPlayer ? associatePlayer : mainPlayer][j]->getPos() == imagePos[1])
+			if (piece[currentPlayer == mainPlayer ? associatePlayer : mainPlayer][j]->getPos() == imagePos[0])
 				piece[currentPlayer == mainPlayer ? associatePlayer : mainPlayer][j]->SetEnable(false, FPS);
 		//卡片操作
 		int tmpIndex = -1, tmpVal;
@@ -261,7 +297,7 @@ void Bot::Update()
 
 int Bot::Draw()
 {
-	if (currentPlayer == mainPlayer)
+	if (currentPlayer != player)
 	{
 		return 0;
 	}
@@ -269,8 +305,7 @@ int Bot::Draw()
 	{
 		image[i].Draw();
 	}
-	if (time <= FPS * 9 / 5)//呼吸灯效果
-		image[5].Draw();
+	image[5].Draw();
 	return 0;
 }
 

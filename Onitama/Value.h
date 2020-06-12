@@ -42,7 +42,7 @@ enum gameMode//游戏方式枚举
 {
 	pvp,
 	pve,
-	online,
+	eve,
 };
 
 enum bgmType//bgm枚举

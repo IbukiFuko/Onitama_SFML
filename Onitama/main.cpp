@@ -86,10 +86,6 @@ int Event()//ÊÂ¼şÏìÓ¦
 		{
 			spacePressed = true;
 		}
-		if (event.type == sf::Event::KeyPressed && sf::Keyboard::isKeyPressed(sf::Keyboard::R))
-		{
-			scene.Restart();
-		}
 	}
 	if (!GameOver)
 	{

@@ -10,6 +10,6 @@
 
 extern Piece *piece[][5];
 extern Mark *mark;
-extern Bot *bot;
+extern Bot *bot, *bot2;
 extern Card *card[];
 extern Image startButton[], menuButton;

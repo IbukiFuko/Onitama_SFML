@@ -34,7 +34,7 @@ int Scene::Initial_Scene_MainMenu()
 	bgmType = bgmType_Menu;
 	startButton[0] = Image(930, 540, 200, 60, 1080, 720, &tBackground, "PVP", 50);
 	startButton[1] = Image(930, 610, 200, 60, 1080, 720, &tBackground, "PVE", 50);
-	startButton[2] = Image(930, 680, 200, 60, 1080, 720, &tBackground, "Online", 50);
+	startButton[2] = Image(930, 680, 200, 60, 1080, 720, &tBackground, "EVE", 50);
 	return 0;
 }
 
@@ -85,7 +85,10 @@ int Scene::Initial_Scene_Battle()
 		piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4], card);
 
 	free(bot);
-	bot = new Bot(piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
+	bot = new Bot(associatePlayer, piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
+		piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4], card);
+	free(bot2);
+	bot2 = new Bot(mainPlayer, piece[0][0], piece[0][1], piece[0][2], piece[0][3], piece[0][4],
 		piece[1][0], piece[1][1], piece[1][2], piece[1][3], piece[1][4], card);
 
 	menuButton = Image(1000, 50, 120, 50, 1080, 720, &tBackground, "Menu", 30);
@@ -164,14 +167,14 @@ int Scene::Update()
 	default:
 		break;
 	}
-
+	/*
 	if (spacePressed)//作弊按键
 	{
 		spacePressed = false;
 		Mark::Reset();
 		currentPlayer = currentPlayer == mainPlayer ? associatePlayer : mainPlayer;
 	}
-
+	/**/
 	return 0;
 }
 
@@ -264,7 +267,7 @@ int Scene::Unload_Scene_Win()
 #pragma region Update
 int Scene::Update_Scene_MainMenu()
 {
-	for(int i = 0;i < 2;i++)
+	for(int i = 0;i < 3;i++)
 		if (startButton[i].isSelected())
 		{
 			startButton[i].SetColor(sf::Color(255, 255, 55, 255));
@@ -288,12 +291,13 @@ int Scene::Update_Scene_MainMenu()
 int Scene::Update_Scene_Battle()
 {
 	//菜单按钮
-	if (menuButton.isSelected())
+	if (!isPlayingAnimation && menuButton.isSelected())
 	{
 		menuButton.SetColor(sf::Color(255, 255, 55, 255));
 		if (mouseLeftPressed)
 		{
 			Unload();
+			ID = scene_mainMenu;
 			Load_Scene_MainMenu();
 			mouseLeftPressed = false;
 		}
@@ -356,9 +360,25 @@ int Scene::Update_Scene_Battle()
 				bot->Update();
 		}
 	}
-	else if (GameMode == online)	//联机对弈
+	else if (GameMode == eve)	//双人机对弈
 	{
-
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 5; j++)
+				piece[i][j]->Update();
+		for (int i = 0; i < 5; i++)
+			card[i]->Update();
+		if (currentPlayer == mainPlayer)
+		{
+			if (!(!isPlayingAnimation && (!piece[mainPlayer][0]->Enable() || piece[associatePlayer][0]->getPos() == MAIN_HOME) ||
+				!isPlayingAnimation && (!piece[associatePlayer][0]->Enable() || piece[mainPlayer][0]->getPos() == ASSOCIATE_HOME)))
+				bot2->Update();
+		}
+		else if (currentPlayer == associatePlayer)
+		{
+			if (!(!isPlayingAnimation && (!piece[mainPlayer][0]->Enable() || piece[associatePlayer][0]->getPos() == MAIN_HOME) ||
+				!isPlayingAnimation && (!piece[associatePlayer][0]->Enable() || piece[mainPlayer][0]->getPos() == ASSOCIATE_HOME)))
+				bot->Update();
+		}
 	}
 	if (currentPlayer == mainPlayer)
 	{
@@ -430,8 +450,18 @@ int Scene::Draw_Scene_Battle()
 	for (int i = 0; i < 5; i++)
 		card[i]->Draw();
 
-	mark->Draw();
-	bot->Draw();
+	if(GameMode == pvp)
+		mark->Draw();
+	else if (GameMode == pve)
+	{
+		mark->Draw();
+		bot->Draw();
+	}
+	else if (GameMode == eve)
+	{
+		bot->Draw();
+		bot2->Draw();
+	}
 	
 	menuButton.Draw();
 

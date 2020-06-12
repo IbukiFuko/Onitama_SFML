@@ -24,6 +24,7 @@
 class Bot
 {
 private:
+	int player;
 	Piece *piece[2][5];//[0主玩家1副玩家][0master1-4servant]
 	Card *card[5];//卡牌
 	int selPiece, selCard;//选中棋子、卡片
@@ -34,7 +35,7 @@ private:
 	int time;
 public:
 	Bot();
-	Bot(Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant3, Piece *_0servant4,
+	Bot(int ,Piece *_0master, Piece *_0servant1, Piece *_0servant2, Piece *_0servant3, Piece *_0servant4,
 		Piece *_1master, Piece *_1servant1, Piece *_1servant2, Piece *_1servant3, Piece *_1servant4,
 		Card **_card);
 	void Update();
