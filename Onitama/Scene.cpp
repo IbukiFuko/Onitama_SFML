@@ -203,6 +203,7 @@ int Scene::Draw()
 #pragma region Load
 int Scene::Load_Scene_MainMenu()
 {
+	window.setTitle(L"Onitama（李琛承）");
 	ID = scene_mainMenu;
 	bgmType = bgmType_Menu;
 	bgm[bgmType].stop();
@@ -432,20 +433,11 @@ int Scene::Draw_Scene_Battle()
 {
 	window.draw(sBackground);
 	window.draw(sChessboard);
-	if (currentPlayer == mainPlayer)//当前玩家的棋子绘制在上方
-	{
-		for (int i = 1; i > -1; i--)
-			for (int j = 0; j < 5; j++)
-				if (piece[i][j]->Enable())
-					piece[i][j]->Draw();
-	}
-	else
-	{
-		for (int i = 0; i < 2; i++)
-			for (int j = 0; j < 5; j++)
-				if (piece[i][j]->Enable())
-					piece[i][j]->Draw();
-	}
+
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 5; j++)
+			if (piece[i][j]->Enable() && !piece[i][j]->isPlaying)
+				piece[i][j]->Draw();
 
 	for (int i = 0; i < 5; i++)
 		card[i]->Draw();
@@ -462,9 +454,14 @@ int Scene::Draw_Scene_Battle()
 		bot->Draw();
 		bot2->Draw();
 	}
-	
-	menuButton.Draw();
 
+	for (int i = 0; i < 2; i++)
+		for (int j = 0; j < 5; j++)
+			if (piece[i][j]->Enable() && piece[i][j]->isPlaying)
+				piece[i][j]->Draw();
+
+	menuButton.Draw();
+	
 	return 0;
 }
 
@@ -478,9 +475,11 @@ int Scene::Draw_Scene_Win()
 	switch (winner)
 	{
 	case mainPlayer:
+		window.setTitle(L"Onitama（李琛承）--红方胜");
 		window.draw(sRedWin);
 		break;
 	case associatePlayer:
+		window.setTitle(L"Onitama（李琛承）--蓝方胜");
 		window.draw(sBlueWin);
 		break;
 	default:

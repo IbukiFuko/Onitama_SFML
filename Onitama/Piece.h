@@ -36,9 +36,9 @@ private:
 	int delay;
 	bool tEnable;
 	Image image;//Æå×ÓÍ¼Ïñ
-	bool isPlaying;
 	sf::Vector2i size;
 public:
+	bool isPlaying;
 	Piece();
 	Piece(int, bool, sf::Vector2i);
 	int Move(sf::Vector2i);//Æå×ÓÒÆ¶¯
